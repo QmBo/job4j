@@ -1,9 +1,9 @@
 package ru.job4j;
 
 /**
-*Calculate.
+* Calculate.
 *
-*@author Victor Egorov (qrioflat@gmail.com)
+* @author Victor Egorov (qrioflat@gmail.com)
 */
 public class Calculate {
 	/**
@@ -17,8 +17,8 @@ public class Calculate {
  
 
 	/**
-	*Main method, write "Hello World!" in console.
-	*@param args args
+	* Main method, write "Hello World!" in console.
+	* @param args args.
 	*/
 	public static void main(String[] args) {
 		System.out.println("Hello World!");
