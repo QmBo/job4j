@@ -13,4 +13,11 @@ public class CounterTest {
         int expected = 30;
         assertThat(counter.add(1, 11), is(expected));
     }
+
+    @Test
+    public void whenStart1AndFinish1ThenReturn0() {
+        Counter counter = new Counter();
+        int expected = 0;
+        assertThat(counter.add(1, 1), is(expected));
+    }
 }
