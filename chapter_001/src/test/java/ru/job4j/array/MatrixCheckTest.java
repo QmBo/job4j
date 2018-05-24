@@ -28,4 +28,28 @@ public class MatrixCheckTest {
         boolean result = check.mono(input);
         assertThat(result, is(false));
     }
+
+    @Test
+    public void whenDataMonoByTrueAtAnotherDiagonalThenTrue() {
+        MatrixCheck check = new MatrixCheck();
+        boolean[][] input = new boolean[][] {
+                {true, true, true},
+                {false, true, true},
+                {true, false, false}
+        };
+        boolean result = check.mono(input);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenDataMonoByFalseAtAnotherDiagonalThenTrue() {
+        MatrixCheck check = new MatrixCheck();
+        boolean[][] input = new boolean[][] {
+                {true, true, false},
+                {false, false, true},
+                {false, false, false}
+        };
+        boolean result = check.mono(input);
+        assertThat(result, is(true));
+    }
 }
