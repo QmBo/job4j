@@ -15,7 +15,6 @@ public class Point {
      * Position on X.
      */
     private int y;
-
     /**
      * Constructor.
      * @param x x.
@@ -25,7 +24,6 @@ public class Point {
         this.x = x;
         this.y = y;
     }
-
     /**
      * Distance to another point.
      * @param that another point.

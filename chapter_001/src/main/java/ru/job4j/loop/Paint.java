@@ -12,7 +12,7 @@ public class Paint {
     /**
      * Draws a right side of pyramid in pseudo-graphics.
      * @param height height of pyramid.
-     * @return right side ofpyramid.
+     * @return right side of pyramid.
      */
     public String rightTrl(int height) {
         return this.loopBy(
