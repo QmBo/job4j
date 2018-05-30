@@ -25,44 +25,13 @@ public class Logic3T {
      * @return win.
      */
     public boolean isWinnerX() {
-        boolean result = true;
-        for (Figure3T[] aTable : this.table) {
-            boolean[] temp = new boolean[3];
-            for (int index = 0; index < this.table.length; index++) {
-                temp[index] = aTable[index].hasMarkX();
-            }
-            result = this.checkWinner(temp);
-            if (result) {
-                break;
+        boolean[][] status = new boolean[3][3];
+        for (int i = 0; i < this.table.length; i++) {
+            for (int j = 0; j < this.table.length; j++) {
+                status[i][j] = this.table[i][j].hasMarkX();
             }
         }
-        if (!result) {
-            for (int i = 0; i < this.table.length; i++) {
-                boolean[] temp = new boolean[3];
-                for (int j = 0; j < this.table.length; j++) {
-                    temp[j] = this.table[j][i].hasMarkX();
-                }
-                result = this.checkWinner(temp);
-                if (result) {
-                    break;
-                }
-            }
-        }
-        if (!result) {
-            boolean[] temp = new boolean[3];
-            for (int i = 0; i < this.table.length; i++) {
-                temp[i] = this.table[i][i].hasMarkX();
-            }
-            result = this.checkWinner(temp);
-        }
-        if (!result) {
-            boolean[] temp = new boolean[3];
-            for (int i = 0; i < this.table.length; i++) {
-                temp[i] = this.table[i][this.table.length - i - 1].hasMarkX();
-            }
-            result = this.checkWinner(temp);
-        }
-        return result;
+        return this.winnerCheck(status);
     }
 
     /**
@@ -70,24 +39,35 @@ public class Logic3T {
      * @return win.
      */
     public boolean isWinnerO() {
-        boolean result = true;
-        for (Figure3T[] aTable : this.table) {
-            boolean[] temp = new boolean[3];
-            for (int index = 0; index < this.table.length; index++) {
-                temp[index] = aTable[index].hasMarkO();
+        boolean[][] status = new boolean[3][3];
+        for (int i = 0; i < this.table.length; i++) {
+            for (int j = 0; j < this.table.length; j++) {
+                status[i][j] = this.table[i][j].hasMarkO();
             }
-            result = this.checkWinner(temp);
+        }
+        return this.winnerCheck(status);
+    }
+
+    /**
+     * Check win combination in matrix.
+     * @param status matrix wis game status.
+     * @return hav a winner.
+     */
+    private boolean winnerCheck(boolean[][] status) {
+        boolean result = true;
+        for (boolean[] array : status) {
+            result = this.arrayCheck(array);
             if (result) {
                 break;
             }
         }
         if (!result) {
-            for (int i = 0; i < this.table.length; i++) {
+            for (int i = 0; i < status.length; i++) {
                 boolean[] temp = new boolean[3];
-                for (int j = 0; j < this.table.length; j++) {
-                    temp[j] = this.table[j][i].hasMarkO();
+                for (int j = 0; j < status.length; j++) {
+                    temp[j] = status[j][i];
                 }
-                result = this.checkWinner(temp);
+                result = this.arrayCheck(temp);
                 if (result) {
                     break;
                 }
@@ -95,17 +75,17 @@ public class Logic3T {
         }
         if (!result) {
             boolean[] temp = new boolean[3];
-            for (int i = 0; i < this.table.length; i++) {
-                temp[i] = this.table[i][i].hasMarkO();
+            for (int i = 0; i < status.length; i++) {
+                temp[i] = status[i][i];
             }
-            result = this.checkWinner(temp);
+            result = this.arrayCheck(temp);
         }
         if (!result) {
             boolean[] temp = new boolean[3];
-            for (int i = 0; i < this.table.length; i++) {
-                temp[i] = this.table[i][this.table.length - i - 1].hasMarkO();
+            for (int i = 0; i < status.length; i++) {
+                temp[i] = status[i][status.length - i - 1];
             }
-            result = this.checkWinner(temp);
+            result = this.arrayCheck(temp);
         }
         return result;
     }
@@ -115,7 +95,7 @@ public class Logic3T {
      * @param toCheck line.
      * @return win.
      */
-    private boolean checkWinner(boolean[] toCheck) {
+    private boolean arrayCheck(boolean[] toCheck) {
         boolean result = true;
         for (int index = 0; index < toCheck.length; index++) {
             if (!toCheck[index]) {
