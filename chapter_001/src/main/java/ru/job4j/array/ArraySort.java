@@ -6,10 +6,6 @@ package ru.job4j.array;
  * @since 0.1
  */
 public class ArraySort {
-    /**
-     * Array to return.
-     */
-    private int[] result;
 
     /**
      * Join two sort arrays in one sort array.
@@ -18,23 +14,23 @@ public class ArraySort {
      * @return sort array.
      */
     public int[] sort(int[] first, int[] second) {
-        result = new int[first.length + second.length];
+        int[] result = new int[first.length + second.length];
         int firstPos = 0;
         int secondPos = 0;
         int index = 0;
         while (firstPos < first.length && secondPos < second.length) {
             if (first[firstPos] < second[secondPos]) {
-                this.result[index++] = first[firstPos++];
+                result[index++] = first[firstPos++];
             } else {
-                this.result[index++] = second[secondPos++];
+                result[index++] = second[secondPos++];
             }
         }
         if (secondPos < second.length) {
-            close(index, second, secondPos);
+            result = close(result, index, second, secondPos);
         } else if (firstPos < first.length) {
-            close(index, first, firstPos);
+            result = close(result, index, first, firstPos);
         }
-        return this.result;
+        return result;
     }
 
     /**
@@ -43,9 +39,10 @@ public class ArraySort {
      * @param array not over array.
      * @param position start position in not over array,.
      */
-    private void close(int index, int[] array, int position) {
+    private int[] close(int[] result, int index, int[] array, int position) {
         for (int i = position; i < array.length; i++) {
-            this.result[index++] = array[i];
+            result[index++] = array[i];
         }
+        return result;
     }
 }
