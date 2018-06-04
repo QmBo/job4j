@@ -25,14 +25,9 @@ public class Item {
 
     /**
      * Constructor.
-     * @param name name.
-     * @param description description.
-     * @param created created.
      */
-    public Item(String name, String description, long created) {
-        this.created = created;
-        this.name = name;
-        this.description = description;
+    public Item() {
+        this("no Name", "no Description");
     }
 
     /**
@@ -42,6 +37,18 @@ public class Item {
      */
     public Item(String name, String desc) {
         this(name, desc, System.currentTimeMillis());
+    }
+
+    /**
+     * Constructor.
+     * @param name name.
+     * @param description description.
+     * @param created created.
+     */
+    public Item(String name, String description, long created) {
+        this.created = created;
+        this.name = name;
+        this.description = description;
     }
 
     /**
