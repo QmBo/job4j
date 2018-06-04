@@ -36,6 +36,15 @@ public class Item {
     }
 
     /**
+     * Constructor.
+     * @param name name.
+     * @param desc description.
+     */
+    public Item(String name, String desc) {
+        this(name, desc, System.currentTimeMillis());
+    }
+
+    /**
      * Set id.
      * @param id id.
      */
@@ -57,5 +66,21 @@ public class Item {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Get description.
+     * @return description.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Get created time.
+     * @return time in millis.
+     */
+    public long getCreated() {
+        return this.created;
     }
 }
