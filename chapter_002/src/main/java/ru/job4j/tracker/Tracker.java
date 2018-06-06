@@ -21,6 +21,10 @@ public class Tracker {
      * Number of Items.
      */
     private int position = 0;
+    /**
+     * Time to exit.
+     */
+    private boolean exit = false;
 
     /**
      * Add item in array.
@@ -134,5 +138,13 @@ public class Tracker {
      */
     private String generateId() {
         return String.valueOf(System.currentTimeMillis() + RM.nextInt());
+    }
+
+    public boolean isExit() {
+        return this.exit;
+    }
+
+    public void timeToExit() {
+        this.exit = true;
     }
 }
