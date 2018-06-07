@@ -43,13 +43,14 @@ public class Tracker {
      * @param item item.
      */
     public void replace(String id, Item item) {
-        for (int index = 0; index < this.items.length; index++) {
-            if (this.items[index] == null) {
-                break;
-            }
+        for (int index = 0; index < this.position; index++) {
             if (this.items[index].getId().equals(id)) {
+                item.setId(this.items[index].getId());
                 this.items[index] = item;
                 break;
+            }
+            if (index == this.position - 1) {
+                System.out.println("Item not found.");
             }
         }
     }
@@ -59,16 +60,15 @@ public class Tracker {
      * @param id id.
      */
     public void delete(String id) {
-        for (int index = 0; index < this.items.length; index++) {
-            if (this.items[index] == null) {
-                System.out.println("Item not found.");
-                break;
-            }
+        for (int index = 0; index < this.position; index++) {
             if (this.items[index].getId().equals(id)) {
                 System.arraycopy(this.items, index + 1, this.items, index, this.items.length - index - 1);
                 this.position--;
                 System.out.println("Item deleted.");
                 break;
+            }
+            if (index == this.position - 1) {
+                System.out.println("Item not found.");
             }
         }
     }
@@ -80,20 +80,17 @@ public class Tracker {
      */
     public Item[] findByName(String key) {
         Item[] temp = new Item[this.position];
-        int index = 0;
-        for (Item item : this.items) {
-            if (item == null) {
-                if (index == 0) {
-                    System.out.println("Item not found.");
-                }
-                break;
+        int find = 0;
+        for (int index = 0; index < this.position; index++) {
+            if (this.items[index].getName().equals(key)) {
+                temp[find++] = this.items[index];
             }
-            if (item.getName().equals(key)) {
-                temp[index++] = item;
+            if (find == this.position - 1 && find == 0) {
+                System.out.println("Item not found.");
             }
         }
-        Item[] result = new Item[index];
-        System.arraycopy(temp, 0, result, 0, index);
+        Item[] result = new Item[find];
+        System.arraycopy(temp, 0, result, 0, find);
         return result;
     }
 
@@ -104,14 +101,13 @@ public class Tracker {
      */
     public Item findById(String id) {
         Item result = null;
-        for (Item item: this.items) {
-            if (item == null) {
-                System.out.println("Item not found.");
+        for (int index = 0; index < this.position; index++) {
+            if (this.items[index].getId().equals(id)) {
+                result = this.items[index];
                 break;
             }
-            if (item.getId().equals(id)) {
-                result = item;
-                break;
+            if (index == this.position - 1) {
+                System.out.println("Item not found.");
             }
         }
         return result;

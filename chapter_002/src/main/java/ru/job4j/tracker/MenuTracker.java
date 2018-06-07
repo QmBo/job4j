@@ -237,7 +237,6 @@ class EditAction implements UserAction {
             String desc = input.ask("Введите новое описание заявки :");
             Item item = new Item(name, desc);
             tracker.replace(answer, item);
-            item.setId(answer);
             System.out.println("------------ Новая заявка с Id : " + item.getId() + " -----------");
         }
     }
