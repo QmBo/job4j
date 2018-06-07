@@ -143,7 +143,8 @@ public class StartUITest {
                 )
         );
     }
-@Test
+
+    @Test
     public void whenUserPrintItemsByIDThenItemsPrinted() {
         Tracker tracker = new Tracker();
         Item firstItem = tracker.add(new Item("test", "desc test"));
@@ -160,6 +161,35 @@ public class StartUITest {
                                 .append(new Date(firstItem.getCreated())).append(" ")
                                 .append("ID: ")
                                 .append(firstItem.getId())
+                                .append(System.lineSeparator())
+                                .append(this.menu)
+                                .toString()
+                )
+        );
+    }
+
+    @Test
+    public void whenItemNotFoundThenPrintItemNotFound() {
+        Tracker tracker = new Tracker();
+        Item firstItem = tracker.add(new Item("test", "desc test"));
+        String wrongId = firstItem.getId() + 1;
+        Input input = new StubInput(new String[]{"2", wrongId, "3", wrongId, "4", wrongId, "5", "Test", "6"});
+        new StartUI(input, tracker).init();
+        assertThat(
+                new String(out.toByteArray()),
+                is(
+                        new StringBuilder()
+                                .append(this.menu)
+                                .append("Item not found.")
+                                .append(System.lineSeparator())
+                                .append(this.menu)
+                                .append("Item not found.")
+                                .append(System.lineSeparator())
+                                .append(this.menu)
+                                .append("Item not found.")
+                                .append(System.lineSeparator())
+                                .append(this.menu)
+                                .append("Item not found.")
                                 .append(System.lineSeparator())
                                 .append(this.menu)
                                 .toString()
