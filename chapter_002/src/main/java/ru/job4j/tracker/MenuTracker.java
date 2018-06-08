@@ -46,6 +46,15 @@ public class MenuTracker {
         this.actions[6] = this.new ExitAction();
     }
 
+    public int[] getRange() {
+        int[] result = new int[this.actions.length];
+        int index = 0;
+        for (UserAction action : actions) {
+            result[index++] = action.key();
+        }
+        return result;
+    }
+
     /**
      * Show Menu.
      */

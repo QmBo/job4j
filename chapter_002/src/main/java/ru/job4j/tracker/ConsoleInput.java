@@ -23,4 +23,20 @@ public class ConsoleInput implements Input {
         System.out.println(question);
         return this.scanner.nextLine();
     }
+
+    @Override
+    public int ask(String question, int[] range) {
+        int result = Integer.valueOf(this.ask(question));
+        boolean invalid = true;
+        for (int key : range) {
+            if (result == key) {
+                invalid = false;
+                break;
+            }
+        }
+        if (invalid) {
+            throw new MenuOutException("Такого пунктв меню нет!");
+        }
+        return result;
+    }
 }
