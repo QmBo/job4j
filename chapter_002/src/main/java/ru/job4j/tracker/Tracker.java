@@ -85,12 +85,13 @@ public class Tracker {
             if (this.items[index].getName().equals(key)) {
                 temp[find++] = this.items[index];
             }
-            if (find == this.position - 1 && find == 0) {
-                System.out.println("Item not found.");
-            }
         }
         Item[] result = new Item[find];
-        System.arraycopy(temp, 0, result, 0, find);
+        if (find == 0) {
+            System.out.println("Item not found.");
+        } else {
+            System.arraycopy(temp, 0, result, 0, find);
+        }
         return result;
     }
 
