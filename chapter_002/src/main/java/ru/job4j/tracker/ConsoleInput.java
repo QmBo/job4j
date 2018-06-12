@@ -24,19 +24,14 @@ public class ConsoleInput implements Input {
         return this.scanner.nextLine();
     }
 
+    /**
+     * Validate ask.
+     * @param question question.
+     * @param range valid values.
+     * @return answer.
+     */
     @Override
     public int ask(String question, int[] range) {
-        int result = Integer.valueOf(this.ask(question));
-        boolean invalid = true;
-        for (int key : range) {
-            if (result == key) {
-                invalid = false;
-                break;
-            }
-        }
-        if (invalid) {
-            throw new MenuOutException("Такого пунктв меню нет!");
-        }
-        return result;
+        return Integer.valueOf(this.ask(question));
     }
 }
