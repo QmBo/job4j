@@ -56,7 +56,7 @@ public class ValidateInput implements Input {
             } catch (NumberFormatException nfe) {
                 System.out.println("Введите корректные данные.");
             } catch (MenuOutException moe) {
-                System.out.println("Такого пунктв меню нет!");
+                System.out.println(moe.getMessage());
                 System.out.println("Введите корректные данные.");
             }
         }
