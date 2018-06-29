@@ -1,5 +1,6 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -118,8 +119,8 @@ public class MenuTracker {
 
         @Override
         public void execute(Input input, Tracker tracker) {
-            Item[] show = tracker.getAll();
-            if (show.length == 0) {
+            ArrayList<Item> show = new ArrayList<>(tracker.getAll());
+            if (show.isEmpty()) {
                 System.out.println("------------ Заявок нет ------------");
             } else {
                 System.out.println("------------ Все заявки ------------");
@@ -158,7 +159,7 @@ public class MenuTracker {
         @Override
         public void execute(Input input, Tracker tracker) {
             String answer = input.ask("Введите имя Заявки : ");
-            if (tracker.findByName(answer).length > 0) {
+            if (!tracker.findByName(answer).isEmpty()) {
                 for (Item item: tracker.findByName(answer)) {
                     showItem(item);
                 }

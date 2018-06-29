@@ -1,5 +1,6 @@
 package ru.job4j.tracker;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -12,15 +13,11 @@ public class Tracker {
     /**
      * All Items.
      */
-    private final Item[] items = new Item[100];
+    private ArrayList<Item> items = new ArrayList<>();
     /**
      * Random generator for id.
      */
     private static final Random RM = new Random(100);
-    /**
-     * Number of Items.
-     */
-    private int position = 0;
     /**
      * Time to exit.
      */
@@ -33,7 +30,7 @@ public class Tracker {
      */
     public Item add(Item item) {
         item.setId(this.generateId());
-        this.items[this.position++] = item;
+        this.items.add(item);
         return item;
     }
 
@@ -43,15 +40,17 @@ public class Tracker {
      * @param item item.
      */
     public void replace(String id, Item item) {
-        for (int index = 0; index < this.position; index++) {
-            if (this.items[index].getId().equals(id)) {
-                item.setId(this.items[index].getId());
-                this.items[index] = item;
+        boolean find = false;
+        for (Item task : this.items) {
+            if (task.getId().equals(id)) {
+                item.setId(task.getId());
+                this.items.set(this.items.indexOf(task), item);
+                find = true;
                 break;
             }
-            if (index == this.position - 1) {
-                System.out.println("Item not found.");
-            }
+        }
+        if (!find) {
+            System.out.println("Item not found.");
         }
     }
 
@@ -60,16 +59,17 @@ public class Tracker {
      * @param id id.
      */
     public void delete(String id) {
-        for (int index = 0; index < this.position; index++) {
-            if (this.items[index].getId().equals(id)) {
-                System.arraycopy(this.items, index + 1, this.items, index, this.items.length - index - 1);
-                this.position--;
+        boolean find = false;
+        for (Item item : items) {
+            if (item.getId().equals(id)) {
+                this.items.remove(item);
                 System.out.println("Item deleted.");
+                find = true;
                 break;
             }
-            if (index == this.position - 1) {
-                System.out.println("Item not found.");
-            }
+        }
+        if (!find) {
+            System.out.println("Item not found.");
         }
     }
 
@@ -78,19 +78,15 @@ public class Tracker {
      * @param key name.
      * @return all item with name.
      */
-    public Item[] findByName(String key) {
-        Item[] temp = new Item[this.position];
-        int find = 0;
-        for (int index = 0; index < this.position; index++) {
-            if (this.items[index].getName().equals(key)) {
-                temp[find++] = this.items[index];
+    public ArrayList<Item> findByName(String key) {
+        ArrayList<Item> result = new ArrayList<>();
+        for (Item item : items) {
+            if (item.getName().equals(key)) {
+                result.add(item);
             }
         }
-        Item[] result = new Item[find];
-        if (find == 0) {
+        if (result.size() == 0) {
             System.out.println("Item not found.");
-        } else {
-            System.arraycopy(temp, 0, result, 0, find);
         }
         return result;
     }
@@ -102,14 +98,16 @@ public class Tracker {
      */
     public Item findById(String id) {
         Item result = null;
-        for (int index = 0; index < this.position; index++) {
-            if (this.items[index].getId().equals(id)) {
-                result = this.items[index];
+        boolean find = false;
+        for (Item task : this.items) {
+            if (task.getId().equals(id)) {
+                result = task;
+                find = true;
                 break;
             }
-            if (index == this.position - 1) {
-                System.out.println("Item not found.");
-            }
+        }
+        if (!find) {
+            System.out.println("Item not found.");
         }
         return result;
     }
@@ -118,15 +116,8 @@ public class Tracker {
      * Return copy of all items.
      * @return all items.
      */
-    public Item[] getAll() {
-        Item[] result = new Item[this.position];
-        for (int index = 0; index < this.position; index++) {
-            if (this.items[index] == null) {
-                break;
-            }
-            result[index] = this.items[index];
-        }
-        return result;
+    public ArrayList<Item> getAll() {
+        return this.items;
     }
 
     /**
