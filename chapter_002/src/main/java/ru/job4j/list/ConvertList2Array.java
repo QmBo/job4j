@@ -27,7 +27,7 @@ public class ConvertList2Array {
                 if (!temp.isEmpty()) {
                     array[row][cell]  = temp.remove(0);
                 } else {
-                    array[row][cell] = 0;
+                    break;
                 }
             }
         }
