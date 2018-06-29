@@ -24,10 +24,16 @@ public class PriorityQueue {
             this.tasks.add(size, task);
         } else {
             int priority = task.getPriority();
+            boolean complete = false;
             for (int index = 0; index != size; index++) {
                 if (priority < this.tasks.get(index).getPriority()) {
                     this.tasks.add(index, task);
+                    complete = true;
+                    break;
                 }
+            }
+            if (!complete) {
+                this.tasks.add(size, task);
             }
         }
     }
