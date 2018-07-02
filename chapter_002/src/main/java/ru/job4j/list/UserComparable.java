@@ -50,4 +50,9 @@ public class UserComparable implements Comparable<UserComparable> {
         }
         return result;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", this.name, this.age);
+    }
 }
