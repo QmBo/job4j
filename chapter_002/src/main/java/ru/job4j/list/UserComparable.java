@@ -42,10 +42,8 @@ public class UserComparable implements Comparable<UserComparable> {
      */
     @Override
     public int compareTo(UserComparable o) {
-        int result;
-        if (this.age != o.getAge()) {
-            result = this.age > o.getAge() ? 1 : -1;
-        } else {
+        int result = this.age - o.getAge();
+        if (result == 0) {
             result = this.name.compareTo(o.getName());
         }
         return result;
