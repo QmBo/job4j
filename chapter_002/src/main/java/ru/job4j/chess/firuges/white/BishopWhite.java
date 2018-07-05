@@ -20,69 +20,32 @@ public class BishopWhite extends Figure {
 
     @Override
     public Cell[] way(Cell source, Cell dest) throws ImposibleMoveException {
-        Cell[] result = new Cell[0];
-        int[][] temp = new int[8][2];
         int position = 0;
-        if (dest.x > source.x && dest.y > source.y) {
-            int x = source.x + 1;
-            int y = source.y + 1;
-            while (x < 8 && y < 8) {
-                temp[position][0] = x++;
-                temp[position++][1] = y++;
-            }
-            int[][] validPos = Arrays.copyOf(temp, position);
-            result = buildWay(dest, validPos);
-        } else if (dest.x > source.x && dest.y < source.y) {
-            int x = source.x + 1;
-            int y = source.y - 1;
-            while (x < 8 && y > -1) {
-                temp[position][0] = x++;
-                temp[position++][1] = y--;
-            }
-            int[][] validPos = Arrays.copyOf(temp, position);
-            result = buildWay(dest, validPos);
-        } else if (dest.x < source.x && dest.y > source.y) {
-            int x = source.x - 1;
-            int y = source.y + 1;
-            while (x > -1 && y < 8) {
-                temp[position][0] = x--;
-                temp[position++][1] = y++;
-            }
-            int[][] validPos = Arrays.copyOf(temp, position);
-            result = buildWay(dest, validPos);
-        } else if (dest.x < source.x && dest.y < source.y) {
-            int x = source.x - 1;
-            int y = source.y - 1;
-            while (x > -1 && y > -1) {
-                temp[position][0] = x--;
-                temp[position++][1] = y--;
-            }
-            int[][] validPos = Arrays.copyOf(temp, position);
-            result = buildWay(dest, validPos);
-        } else {
+        int xMove = dest.x - source.x;
+        int yMove = dest.y - source.y;
+        if (xMove == 0 || yMove == 0 || Math.abs(xMove) != Math.abs(yMove)) {
             throw new ImposibleMoveException("Слон должен ходить по диагонали.");
         }
-        return result;
-    }
-
-    private Cell[] buildWay(Cell dest, int[][] validPos) throws ImposibleMoveException {
-        Cell[] result = new Cell[0];
-        for (int step = 0; step != validPos.length; step++) {
-            if (validPos[step][0] == dest.x && validPos[step][1] == dest.y) {
-                result = new Cell[++step];
-                for (int index = 0; index < step; index++) {
-                    for (Cell cell : Cell.values()) {
-                        if (cell.x == validPos[index][0] && cell.y == validPos[index][1]) {
-                            result[index] = cell;
-                            break;
-                        }
-                    }
+        int steps = Math.abs(xMove);
+        int xDirection = xMove > 0 ? 1 : -1;
+        int yDirection = yMove > 0 ? 1 : -1;
+        int x = source.x + xDirection;
+        int y = source.y + yDirection;
+        int[][] temp = new int[steps][2];
+        while (position != steps) {
+            temp[position][0] = x;
+            temp[position++][1] = y;
+            x += xDirection;
+            y += yDirection;
+        }
+        Cell[] result = new Cell[steps];
+        for (int index = 0; index < steps; index++) {
+            for (Cell cell : Cell.values()) {
+                if (cell.x == temp[index][0] && cell.y == temp[index][1]) {
+                    result[index] = cell;
+                    break;
                 }
-                break;
             }
-        }
-        if (result.length == 0) {
-            throw new ImposibleMoveException("Слон должен ходить по диагонали.");
         }
         return result;
     }
