@@ -2,6 +2,7 @@ package ru.job4j.chess.firuges.white;
 
 import ru.job4j.chess.firuges.Cell;
 import ru.job4j.chess.firuges.Figure;
+import ru.job4j.chess.firuges.ImposibleMoveException;
 
 /**
  * //TODO add comments.
@@ -17,8 +18,17 @@ public class PawnWhite extends Figure {
     }
 
     @Override
-    public Cell[] way(Cell source, Cell dest) {
-        return new Cell[] {dest};
+    public Cell[] way(Cell source, Cell dest) throws ImposibleMoveException {
+        if (source.y == 1) {
+            if (source.x != dest.x || dest.y - source.y > 2 || dest.y - source.y < 0) {
+                throw new ImposibleMoveException("Пешка должна ходить по прямой на одну или две клетки.");
+            }
+        } else {
+            if (source.x != dest.x || dest.y - source.y > 1 || dest.y - source.y < 0) {
+                throw new ImposibleMoveException("Пешка должна ходить по прямой на одну клетки.");
+            }
+        }
+        return super.way(source, dest);
     }
 
     @Override

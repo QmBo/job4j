@@ -2,6 +2,7 @@ package ru.job4j.chess.firuges.white;
 
 import ru.job4j.chess.firuges.Cell;
 import ru.job4j.chess.firuges.Figure;
+import ru.job4j.chess.firuges.ImposibleMoveException;
 
 /**
  *
@@ -16,8 +17,13 @@ public class RookWhite extends Figure {
     }
 
     @Override
-    public Cell[] way(Cell source, Cell dest) {
-        return new Cell[] {dest};
+    public Cell[] way(Cell source, Cell dest) throws ImposibleMoveException {
+        if (source.x != dest.x) {
+            if (source.y != dest.y) {
+                throw new ImposibleMoveException("Лалья должна ходить горизонтально или вертикально.");
+            }
+        }
+        return super.way(source, dest);
     }
 
     @Override
