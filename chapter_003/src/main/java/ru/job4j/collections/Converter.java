@@ -47,11 +47,16 @@ public class Converter {
         @Override
         public boolean hasNext() {
             boolean result = false;
-            if (this.itOfInteger.hasNext()) {
-                result = true;
-            } else if (this.itOfIterators.hasNext()) {
-                this.itOfInteger = this.itOfIterators.next();
-                result = this.hasNext();
+            boolean done = false;
+            while (!done) {
+                if (this.itOfInteger.hasNext()) {
+                    result = true;
+                    done = true;
+                } else if (this.itOfIterators.hasNext()) {
+                    this.itOfInteger = this.itOfIterators.next();
+                } else {
+                    done = true;
+                }
             }
             return result;
         }
@@ -63,14 +68,10 @@ public class Converter {
          */
         @Override
         public Integer next() {
-            Integer result = null;
-            if (this.itOfInteger.hasNext()) {
+            Integer result;
+            if (this.hasNext()) {
                 result = this.itOfInteger.next();
-            } else if (this.itOfIterators.hasNext()) {
-                this.itOfInteger = this.itOfIterators.next();
-                result = this.itOfInteger.next();
-            }
-            if (result == null) {
+            } else {
                 throw new NoSuchElementException("NoSuchElementException");
             }
             return result;
