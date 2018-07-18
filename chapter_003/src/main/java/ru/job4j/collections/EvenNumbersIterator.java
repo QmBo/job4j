@@ -33,11 +33,8 @@ public class EvenNumbersIterator implements Iterator<Integer> {
     @Override
     public boolean hasNext() {
         boolean result = false;
-        for (int index = this.position; index != this.array.length; index++) {
-            if (this.array[index] % 2 == 0) {
-                result = true;
-                break;
-            }
+        if (this.findEven() != -1) {
+            result = true;
         }
         return result;
     }
@@ -48,16 +45,29 @@ public class EvenNumbersIterator implements Iterator<Integer> {
      */
     @Override
     public Integer next() {
-        Integer result = -1;
+        Integer result;
+        if (this.hasNext()) {
+            int index = this.findEven();
+            result = this.array[index];
+            this.position = ++index;
+        } else {
+            throw new NoSuchElementException("no element");
+        }
+        return result;
+    }
+
+    /**
+     * Find index of next even element.
+     * If has't next even element return -1.
+     * @return index of next even element.
+     */
+    private int findEven() {
+        int result = -1;
         for (int index = this.position; index != this.array.length; index++) {
             if (this.array[index] % 2 == 0) {
-                result = this.array[index];
-                this.position = ++index;
+                result = index;
                 break;
             }
-        }
-        if (result == -1) {
-            throw new NoSuchElementException("no element");
         }
         return result;
     }
