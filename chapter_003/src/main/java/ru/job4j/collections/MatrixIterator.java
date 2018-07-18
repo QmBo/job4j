@@ -50,10 +50,10 @@ public class MatrixIterator implements Iterator<Integer> {
     @Override
     public Integer next() {
         Integer result;
-        try {
+        if (this.hasNext()) {
             result = array[line][position++];
-        } catch (IndexOutOfBoundsException ioobe) {
-            throw new NoSuchElementException(ioobe.getMessage());
+        } else {
+            throw new NoSuchElementException("NoSuchElementException");
         }
         if (this.position == array[line].length) {
             this.position = 0;
