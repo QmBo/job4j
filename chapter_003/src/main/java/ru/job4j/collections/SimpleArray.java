@@ -26,13 +26,12 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param length siz of array.
      */
     public SimpleArray(int length) {
-        if (length >= 0) {
-            this.array = new Object[length];
-        } else {
+        if (length < 0) {
             throw new IllegalArgumentException(
                     format("IllegalArgumentException %s", length)
             );
         }
+        this.array = new Object[length];
     }
 
     /**
@@ -40,11 +39,10 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model new element.
      */
     public void add(T model) {
-        if (this.size != this.array.length) {
-            this.array[size++] = model;
-        } else {
+        if (this.size == this.array.length) {
             throw new IllegalStateException("Array fool.");
         }
+        this.array[size++] = model;
     }
 
     /**
@@ -53,13 +51,8 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model new element.
      */
     public void set(int index, T model) {
-        if (index > -1 && index < this.size) {
-            this.array[index] = model;
-        } else {
-            throw new IndexOutOfBoundsException(
-                    format("%s not in rang 0 - %s", index, this.size - 1)
-            );
-        }
+        this.indexCheck(index);
+        this.array[index] = model;
     }
 
     /**
@@ -67,18 +60,13 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param index index.
      */
     public void delete(int index) {
-        if (index > -1 && index < this.size) {
-            this.array[index] = null;
-            this.size--;
-            System.arraycopy(
-                    this.array, index + 1, this.array,
-                    index, size - index
-            );
-        } else {
-            throw new IndexOutOfBoundsException(
-                    format("%s not in rang 0 - %s", index, this.size - 1)
-            );
-        }
+        this.indexCheck(index);
+        this.array[index] = null;
+        this.size--;
+        System.arraycopy(
+                this.array, index + 1, this.array,
+                index, size - index
+        );
     }
 
     /**
@@ -87,15 +75,20 @@ public class SimpleArray<T> implements Iterable<T> {
      * @return element.
      */
     public T get(int index) {
-        T result;
-        if (index > -1 && index < this.size) {
-            result = (T) this.array[index];
-        } else {
+        this.indexCheck(index);
+        return (T) this.array[index];
+    }
+
+    /**
+     * Check index to correct.
+     * @param index index.
+     */
+    private void indexCheck(int index) {
+        if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException(
                     format("%s not in rang 0 - %s", index, this.size - 1)
             );
         }
-        return result;
     }
 
     /**
@@ -135,13 +128,11 @@ public class SimpleArray<T> implements Iterable<T> {
          */
         @Override
         public T next() {
-            T result;
-            if (this.hasNext()) {
-                result = (T) SimpleArray.this.array[this.findElement()];
-                this.position++;
-            } else {
+            if (!this.hasNext()) {
                 throw new NoSuchElementException("NoSuchElementException");
             }
+            T result = (T) SimpleArray.this.array[this.findElement()];
+            this.position++;
             return result;
         }
 
