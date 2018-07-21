@@ -49,12 +49,10 @@ public class MatrixIterator implements Iterator<Integer> {
      */
     @Override
     public Integer next() {
-        Integer result;
-        if (this.hasNext()) {
-            result = array[line][position++];
-        } else {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("NoSuchElementException");
         }
+        Integer result = array[line][position++];
         if (this.position == array[line].length) {
             this.position = 0;
             this.line++;
