@@ -2,7 +2,6 @@ package ru.job4j.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
 import static java.lang.String.format;
 
 /**
@@ -53,6 +52,22 @@ public class SimpleArray<T> implements Iterable<T> {
     public void set(int index, T model) {
         this.indexCheck(index);
         this.array[index] = model;
+    }
+
+    /**
+     * Find index of element.
+     * @param model element.
+     * @return index.
+     */
+    public int indexOf(T model) {
+        int result = -1;
+        for (int index = 0; index < this.size; index++) {
+            if (this.array[index].equals(model)) {
+                result = index;
+                break;
+            }
+        }
+        return result;
     }
 
     /**
