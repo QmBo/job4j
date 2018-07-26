@@ -10,23 +10,23 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class DynamicArrayListTest {
-    private DynamicArrayList<String> list;
+public class SimpleLinkedListTest {
+    private SimpleLinkedList<String> list;
 
     @Before
     public void setUp() {
-        list = new DynamicArrayList<>(4);
+        list = new SimpleLinkedList<>();
+        list.add("00");
         list.add("11");
         list.add("22");
-        list.add("33");
     }
 
     @Test
-    public void whenNoModificationThenUseGetOneIs22() {
+    public void whenNoModificationThenUseGetOneIs11() {
         Iterator<String> it = list.iterator();
-        assertThat(list.get(1), is("22"));
+        assertThat(list.get(1), is("11"));
         it.next();
-        assertThat(it.next(), is("22"));
+        assertThat(it.next(), is("11"));
     }
 
     @Test
