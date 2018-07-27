@@ -29,17 +29,33 @@ public class SimpleLinkedList<E> implements Iterable<E> {
     private int size;
 
     /**
-     * Add element to List.
+     * Add element to end of List.
      * @param model new element.
      */
     public void add(E model) {
+        this.add(model, false);
+    }
+
+    /**
+     * Add element to end or head of List.
+     * @param model new element.
+     * @param revers add to head.
+     */
+    public void add(E model, boolean revers) {
         Node<E> newNode = new Node<>(model);
         if (this.first == null) {
             this.first = newNode;
             this.last = newNode;
         } else {
-            this.last.next = newNode;
-            this.last = newNode;
+            if (revers) {
+                this.first.previous = newNode;
+                newNode.next = this.first;
+                this.first = newNode;
+            } else {
+                this.last.next = newNode;
+                newNode.previous = this.last;
+                this.last = newNode;
+            }
         }
         this.size++;
         this.modCount++;
@@ -51,17 +67,38 @@ public class SimpleLinkedList<E> implements Iterable<E> {
      * @return element.
      */
     public E get(int index) {
+        if (this.size == 0) {
+            throw new NoSuchElementException("List is empty.");
+        }
         if (index < 0 || index >= this.size) {
             throw new IndexOutOfBoundsException(
                     format("%s not in rang 0 - %s", index, this.size - 1));
-        }
-        if (this.size == 0) {
-            throw new NoSuchElementException("NoSuchElementException");
         }
         Node<E> result = this.first;
         for (int i = 0; i < index; i++) {
             result = result.next;
         }
+        return result.data;
+    }
+
+    /**
+     * Return and delete last element.
+     * @return last element.
+     */
+    public E deleteLast() {
+        if (this.last == null) {
+            throw new NoSuchElementException("List is empty.");
+        }
+        Node<E> result = this.last;
+        if (this.size == 1) {
+            this.last = null;
+            this.first = null;
+        } else {
+            this.last = this.last.previous;
+            this.last.next = null;
+        }
+        this.modCount++;
+        this.size--;
         return result.data;
     }
 
@@ -78,8 +115,18 @@ public class SimpleLinkedList<E> implements Iterable<E> {
      * Node class.
      */
     private static class Node<E> {
-        E data;
-        Node<E> next;
+        /**
+         * Data.
+         */
+        private E data;
+        /**
+         * Next element.
+         */
+        private Node<E> next;
+        /**
+         * Previous element.
+         */
+        private Node<E> previous;
 
         /**
          * Constructor.
@@ -138,7 +185,7 @@ public class SimpleLinkedList<E> implements Iterable<E> {
         @Override
         public E next() {
             if (!this.hasNext()) {
-                throw new NoSuchElementException("NoSuchElementException");
+                throw new NoSuchElementException("Next element is absent.");
             }
             if (this.position == 0) {
                 this.focus = SimpleLinkedList.this.first;

@@ -37,6 +37,22 @@ public class SimpleLinkedListTest {
         assertThat(list.get(5), is("Test3"));
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void whenDeleteLastThenHasntLast() {
+        assertThat(list.deleteLast(), is("22"));
+        assertThat(list.deleteLast(), is("11"));
+        assertThat(list.deleteLast(), is("00"));
+        list.deleteLast();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenDeleteAllThenHasntUseGet() {
+        assertThat(list.deleteLast(), is("22"));
+        assertThat(list.deleteLast(), is("11"));
+        assertThat(list.deleteLast(), is("00"));
+        list.get(-444);
+    }
+
     @Test(expected = ConcurrentModificationException.class)
     public void whenThrowIterator() {
         Iterator<String> it = list.iterator();
