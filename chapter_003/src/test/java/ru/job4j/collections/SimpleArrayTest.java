@@ -3,6 +3,7 @@ package ru.job4j.collections;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -109,5 +110,13 @@ public class SimpleArrayTest {
     @Test(expected = IllegalArgumentException.class)
     public void constructorMastThrowIllegalArgumentException() {
         sa = new SimpleArray<>(-1);
+    }
+
+    @Test(expected = ConcurrentModificationException.class)
+    public void whenThrowIterator() {
+        Iterator<String> it = sa.iterator();
+        sa.add("test");
+        assertThat(sa.get(3), is("test"));
+        it.next();
     }
 }

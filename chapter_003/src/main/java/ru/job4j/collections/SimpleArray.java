@@ -1,5 +1,6 @@
 package ru.job4j.collections;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import static java.lang.String.format;
@@ -19,6 +20,10 @@ public class SimpleArray<T> implements Iterable<T> {
      * Amount elements.
      */
     private int size = 0;
+    /**
+     * Modification.
+     */
+    private int modCount;
 
     /**
      * Constructor.
@@ -42,6 +47,7 @@ public class SimpleArray<T> implements Iterable<T> {
             throw new IllegalStateException("Array fool.");
         }
         this.array[size++] = model;
+        this.modCount++;
     }
 
     /**
@@ -82,6 +88,7 @@ public class SimpleArray<T> implements Iterable<T> {
                 this.array, index + 1, this.array,
                 index, size - index
         );
+        this.modCount++;
     }
 
     /**
@@ -112,7 +119,7 @@ public class SimpleArray<T> implements Iterable<T> {
      */
     @Override
     public Iterator<T> iterator() {
-        return new It();
+        return new It(this.modCount);
     }
 
     /**
@@ -120,9 +127,17 @@ public class SimpleArray<T> implements Iterable<T> {
      */
     private class It implements Iterator<T> {
         /**
+         * Modification.
+         */
+        private final int expectedModCount;
+        /**
          * Iterator focus.
          */
         private int position = 0;
+
+        private It(final int expectedModCount) {
+            this.expectedModCount = expectedModCount;
+        }
 
         /**
          * Check nas next element.
@@ -130,8 +145,11 @@ public class SimpleArray<T> implements Iterable<T> {
          */
         @Override
         public boolean hasNext() {
+            if (this.expectedModCount != SimpleArray.this.modCount) {
+                throw new ConcurrentModificationException("ConcurrentModificationException");
+            }
             boolean result = false;
-            if (this.findElement() != -1) {
+            if (this.position < SimpleArray.this.size) {
                 result = true;
             }
             return result;
@@ -146,24 +164,7 @@ public class SimpleArray<T> implements Iterable<T> {
             if (!this.hasNext()) {
                 throw new NoSuchElementException("NoSuchElementException");
             }
-            T result = (T) SimpleArray.this.array[this.findElement()];
-            this.position++;
-            return result;
-        }
-
-        /**
-         * Find next element.
-         * If nas not next element return -1.
-         * @return index of element.
-         */
-        private int findElement() {
-            int result = -1;
-            for (int index = this.position; index < SimpleArray.this.array.length; index++) {
-                if (SimpleArray.this.array[index] != null) {
-                    result = index;
-                    break;
-                }
-            }
+            T result = (T) SimpleArray.this.array[this.position++];
             return result;
         }
     }
