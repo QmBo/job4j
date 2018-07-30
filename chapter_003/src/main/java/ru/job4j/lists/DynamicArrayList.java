@@ -39,10 +39,17 @@ public class DynamicArrayList<E> implements Iterable<E> {
      */
     public void add(E model) {
         if (this.size == this.container.length) {
-            this.container = Arrays.copyOf(this.container, this.container.length * 2);
+           this.containerRise();
         }
         this.container[size++] = model;
         this.modCount++;
+    }
+
+    /**
+     * Increase the container.
+     */
+    private void containerRise() {
+        this.container = Arrays.copyOf(this.container, this.container.length * 2);
     }
 
     /**
@@ -99,7 +106,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
                 throw new ConcurrentModificationException("ConcurrentModificationException");
             }
             boolean result = false;
-            if (this.findElement() != -1) {
+            if (this.position < DynamicArrayList.this.size) {
                 result = true;
             }
             return result;
@@ -114,22 +121,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
             if (!this.hasNext()) {
                 throw new NoSuchElementException("NoSuchElementException");
             }
-            E result = (E) DynamicArrayList.this.container[this.findElement()];
-            this.position++;
-            return result;
-        }
-
-        /**
-         * Find next element.
-         * If nas not next element return -1.
-         * @return index of element.
-         */
-        private int findElement() {
-            int result = -1;
-            for (int index = this.position; index < DynamicArrayList.this.size; index++) {
-                result = index;
-                break;
-            }
+            E result = (E) DynamicArrayList.this.container[this.position++];
             return result;
         }
     }
