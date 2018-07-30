@@ -15,10 +15,12 @@ public class CycleCheckerTest {
         Node<Integer> two = new Node(2);
         Node<Integer> third = new Node(3);
         Node<Integer> four = new Node(4);
+        Node<Integer> five = new Node(5);
         first.next = two;
         two.next = third;
         third.next = four;
-        four.next = first;
+        four.next = five;
+        five.next = first;
         assertThat(cc.hasCycle(two), is(true));
     }
 

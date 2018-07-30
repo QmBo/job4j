@@ -14,29 +14,15 @@ public class CycleChecker<T> {
      */
     boolean hasCycle(Node<T> first) {
         boolean result = false;
-        if (first.next != null) {
-            result = checkCycle(first);
-            if (!result) {
-                this.hasCycle(first.next);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Checker helper.
-     * @param start check element.
-     * @return cycle.
-     */
-    private boolean checkCycle(Node<T> start) {
-        boolean result = false;
-        Node<T> next = start.next;
-        while (next.next != null) {
-            if (start == next) {
+        Node<T> slow = first;
+        Node<T> fast = first;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
                 result = true;
                 break;
             }
-            next = next.next;
         }
         return result;
     }
