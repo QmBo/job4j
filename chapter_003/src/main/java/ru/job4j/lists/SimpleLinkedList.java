@@ -27,27 +27,36 @@ public class SimpleLinkedList<E> implements Iterable<E> {
      * Number of elements
      */
     private int size;
+    /**
+     * Add element to head.
+     */
+    private final boolean revers;
 
     /**
-     * Add element to end of List.
-     * @param model new element.
+     * Constructor.
      */
-    public void add(E model) {
-        this.add(model, false);
+    public SimpleLinkedList() {
+        this(false);
+    }
+
+    /**
+     * Constructor.
+     */
+    public SimpleLinkedList(boolean revers) {
+        this.revers = revers;
     }
 
     /**
      * Add element to end or head of List.
      * @param model new element.
-     * @param revers add to head.
      */
-    public void add(E model, boolean revers) {
+    public void add(E model) {
         Node<E> newNode = new Node<>(model);
         if (this.first == null) {
             this.first = newNode;
             this.last = newNode;
         } else {
-            if (revers) {
+            if (this.revers) {
                 this.first.previous = newNode;
                 newNode.next = this.first;
                 this.first = newNode;
