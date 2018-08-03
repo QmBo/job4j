@@ -16,12 +16,4 @@ public class RoleStore<T extends Role> extends AbstractStore<T> {
         super(length);
     }
 
-    /**
-     * Add element to capacity.
-     * @param model element.
-     */
-    @Override
-    public void add(T model) {
-        super.add(model);
-    }
 }

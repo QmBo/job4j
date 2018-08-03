@@ -15,13 +15,4 @@ public class UserStore<T extends User> extends AbstractStore<T> {
     protected UserStore(int length) {
         super(length);
     }
-
-    /**
-     * Add element to capacity.
-     * @param model element.
-     */
-    @Override
-    public void add(T model) {
-        super.add(model);
-    }
 }
