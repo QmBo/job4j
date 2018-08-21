@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
  * @version 0.1
  * @since 21.08.2018
  */
-public class RectangleMove implements Runnable {
+public class RectangleMove extends Thread {
     /**
      * Rectangle.
      */
@@ -15,39 +15,43 @@ public class RectangleMove implements Runnable {
     /**
      * Direction step.
      */
-    private final int move;
+    private int move = 1;
     /**
-     * Direction.
+     * Left edge.
      */
-    private final boolean moveRight;
+    private final int leftEdge;
     /**
-     * Edge.
+     * Right edge.
      */
-    private final int limit;
+    private final int rightEdge;
+    /**
+     * Move direction.
+     */
+    private boolean moveRight = true;
+    /**
+     * Focus edge.
+     */
+    private int limit;
 
     /**
      * Constructor.
      * @param rect rectangle.
      */
     public RectangleMove(Rectangle rect) {
-        this(rect, true);
+        this(rect, 0, 300);
     }
 
     /**
      * Constructor.
      * @param rect rectangle.
-     * @param moveRight move direction.
+     * @param leftEdge left edge.
+     * @param rightEdge right edge.
      */
-    public RectangleMove(Rectangle rect, final boolean moveRight) {
+    public RectangleMove(Rectangle rect, final int leftEdge, final int rightEdge) {
         this.rect = rect;
-        this.moveRight = moveRight;
-        if (moveRight) {
-            this.move = 1;
-            this.limit = 300;
-        } else {
-            this.move = -1;
-            this.limit = 0;
-        }
+        this.leftEdge = leftEdge;
+        this.rightEdge = rightEdge;
+        this.limit = rightEdge;
     }
 
     /**
@@ -55,14 +59,26 @@ public class RectangleMove implements Runnable {
      */
     @Override
     public void run() {
-        while (this.rect.getX() != limit) {
+        while (true) {
+            if (Thread.interrupted()) {
+                return;
+            }
             this.rect.setX(this.rect.getX() + this.move);
             try {
                 Thread.sleep(25);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+                return;
+            }
+            if (this.rect.getX() == this.limit) {
+                if (this.moveRight) {
+                    this.limit = this.leftEdge;
+                } else {
+                    this.limit = this.rightEdge;
+                }
+                this.move = -this.move;
+                this.moveRight = !this.moveRight;
             }
         }
-        new Thread(new RectangleMove(this.rect, !this.moveRight)).start();
     }
 }
