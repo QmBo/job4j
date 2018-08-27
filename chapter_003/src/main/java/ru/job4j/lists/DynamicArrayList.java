@@ -29,7 +29,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
      * Constructor.
      * @param length length of container.
      */
-    protected DynamicArrayList(int length) {
+    public DynamicArrayList(int length) {
         this.container = new Object[length];
     }
 
