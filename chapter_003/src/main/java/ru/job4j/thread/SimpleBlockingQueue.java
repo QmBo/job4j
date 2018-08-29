@@ -39,8 +39,8 @@ public class SimpleBlockingQueue<T> {
         T result;
         synchronized (this.queue) {
             while (this.queue.isEmpty()) {
-                this.queue.wait();
                 System.out.println("wait");
+                this.queue.wait();
             }
             result = this.queue.poll();
         }
