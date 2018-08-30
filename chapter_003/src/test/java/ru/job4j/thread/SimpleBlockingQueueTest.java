@@ -1,74 +1,81 @@
 package ru.job4j.thread;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("ALL")
 public class SimpleBlockingQueueTest {
 
-    private SimpleBlockingQueue<Integer> bQ;
-    private Thread producer;
-    private Thread consumer;
-    List<Integer> list;
-
-    @Before
-    public void setUp() {
-        bQ = new SimpleBlockingQueue<>();
-        list = new ArrayList<>();
-        producer = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    bQ.offer(10);
-                    System.out.println("offer");
-                    sleep(10);
-                    bQ.offer(20);
-                    System.out.println("offer");
-                    sleep(10);
-                    bQ.offer(30);
-                    System.out.println("offer");
-                    sleep(10);
-                    bQ.offer(40);
-                    System.out.println("offer");
-                    sleep(10);
-                    bQ.offer(50);
-                    System.out.println("offer");
-                    sleep(10);
-                    bQ.offer(60);
-                    System.out.println("offer");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        consumer = new Thread() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 6; i++) {
-                    try {
-                        list.add(bQ.poll());
-                        System.out.println("pool");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+    @Test
+    public void whenProducerSlowThenNoExceptions() throws InterruptedException {
+        final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
+        Thread producer = new Thread(
+                () -> {
+                    for (int i = 0; i < 5; i++) {
+                        queue.offer(i);
+                        System.out.println("offer");
                     }
                 }
-            }
-        };
+        );
+        Thread consumer = new Thread(
+                () -> {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+                        try {
+                            buffer.add(queue.poll());
+                            System.out.println("pool");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+        );
+        consumer.start();
+        Thread.sleep(250);
+        producer.start();
+        producer.join();
+        consumer.interrupt();
+        consumer.join();
+        assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
     }
 
     @Test
-    public void whenTwoTreadsThenNoExceptions() throws InterruptedException {
-        consumer.start();
+    public void whenConsumerSlowThenNoExceptions() throws InterruptedException {
+        final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>();
+        Thread producer = new Thread(
+                () -> {
+                    for (int i = 0; i < 5; i++) {
+                        queue.offer(i);
+                        System.out.println("offer");
+                    }
+                }
+        );
+        Thread consumer = new Thread(
+                () -> {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
+                        try {
+                            buffer.add(queue.poll());
+                            System.out.println("pool");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                }
+        );
         producer.start();
+        Thread.sleep(250);
+        consumer.start();
         producer.join();
+        consumer.interrupt();
         consumer.join();
-        assertThat(list, is(Arrays.asList(10, 20, 30, 40, 50, 60)));
+        assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
     }
 }

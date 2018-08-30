@@ -18,6 +18,10 @@ public class SimpleBlockingQueue<T> {
      */
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
+    /**
+     * Queue limit.
+     */
+    private final int queueLimit = 3;
 
     /**
      * Add element to capacity and wake thread.
@@ -25,6 +29,14 @@ public class SimpleBlockingQueue<T> {
      */
     public void offer(T value) {
         synchronized (this.queue) {
+            while (this.queue.size() == this.queueLimit) {
+                System.out.println("offer wait");
+                try {
+                    this.queue.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             this.queue.add(value);
             this.queue.notify();
         }
@@ -36,14 +48,21 @@ public class SimpleBlockingQueue<T> {
      * @throws InterruptedException
      */
     public T poll() throws InterruptedException {
-        T result;
         synchronized (this.queue) {
             while (this.queue.isEmpty()) {
-                System.out.println("wait");
+                System.out.println("poll wait");
                 this.queue.wait();
             }
-            result = this.queue.poll();
+            this.queue.notify();
         }
-        return result;
+        return this.queue.poll();
+    }
+
+    /**
+     * Is Queue empty.
+     * @return empty.
+     */
+    public synchronized boolean isEmpty() {
+        return this.queue.isEmpty();
     }
 }
