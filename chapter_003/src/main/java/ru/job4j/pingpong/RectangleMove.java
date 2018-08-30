@@ -59,16 +59,13 @@ public class RectangleMove extends Thread {
      */
     @Override
     public void run() {
-        while (true) {
-            if (Thread.interrupted()) {
-                return;
-            }
+        while (!Thread.currentThread().isInterrupted()) {
             this.rect.setX(this.rect.getX() + this.move);
             try {
-                Thread.sleep(25);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
-                return;
+                Thread.currentThread().interrupt();
             }
             if (this.rect.getX() == this.limit) {
                 if (this.moveRight) {
