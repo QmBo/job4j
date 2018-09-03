@@ -42,8 +42,7 @@ public class CashTest {
         Thread threadA = new Thread(
                 () -> {
                     try {
-                        Base model = cash.getModel(1);
-                        cash.update(new Base(model.id, model.version));
+                        cash.update(new Base(1, 0));
                     } catch (OptimisticException e) {
                         ex.set(e);
                     }
@@ -52,8 +51,7 @@ public class CashTest {
         Thread threadB = new Thread(
                 () -> {
                     try {
-                        Base model = cash.getModel(1);
-                        cash.update(new Base(model.id, model.version));
+                        cash.update(new Base(1, 0));
                     } catch (OptimisticException e) {
                         ex.set(e);
                     }
