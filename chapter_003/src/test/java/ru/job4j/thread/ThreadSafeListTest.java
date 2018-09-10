@@ -3,6 +3,8 @@ package ru.job4j.thread;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -60,5 +62,30 @@ public class ThreadSafeListTest {
         }
         assertThat(first.toString(), is("1111100000"));
         assertThat(second.toString(), is("0000011111"));
+    }
+
+    @Test
+    public void whenIteratorThen0() {
+        Iterator<String> it = list.iterator();
+        it.next();
+        it.next();
+        it.next();
+        it.next();
+        assertThat(it.hasNext(), is(true));
+        assertThat(it.next(), is("0"));
+        assertThat(it.hasNext(), is(false));
+    }
+
+    @Test
+    public void whenUpdateThenIteratorNotUpdate() {
+        Iterator<String> it = list.iterator();
+        list.addToArray("1");
+        it.next();
+        it.next();
+        it.next();
+        it.next();
+        assertThat(it.hasNext(), is(true));
+        assertThat(it.next(), is("0"));
+        assertThat(it.hasNext(), is(false));
     }
 }

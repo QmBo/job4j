@@ -4,6 +4,9 @@ import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 import ru.job4j.lists.DynamicArrayList;
 import ru.job4j.lists.SimpleLinkedList;
+
+import java.util.Iterator;
+
 /**
  * ThreadSafeList
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -11,7 +14,7 @@ import ru.job4j.lists.SimpleLinkedList;
  * @since 27.08.2018
  */
 @ThreadSafe
-public class ThreadSafeList<E> {
+public class ThreadSafeList<E> implements Iterable<E> {
     /**
      * List capacity.
      */
@@ -64,4 +67,23 @@ public class ThreadSafeList<E> {
     public synchronized E getFromArray(int index) {
         return this.arrayList.get(index);
     }
+
+    /**
+     * Helper to iterator.
+     * @param list input list.
+     * @return copy of list.
+     */
+    private DynamicArrayList<E> copy(DynamicArrayList<E> list) {
+        DynamicArrayList<E> result = new DynamicArrayList<>(100);
+        for (E e : list) {
+            result.add(e);
+        }
+        return result;
+    }
+
+    @Override
+    public synchronized Iterator<E> iterator() {
+        return this.copy(this.arrayList).iterator();
+    }
+
 }
