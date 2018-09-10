@@ -21,7 +21,7 @@ public class SimpleBlockingQueue<T> {
     /**
      * Queue limit.
      */
-    private final int queueLimit = 3;
+    private final static int QUEUE_LIMIT = 3;
 
     /**
      * Add element to capacity and wake thread.
@@ -29,7 +29,7 @@ public class SimpleBlockingQueue<T> {
      */
     public void offer(T value) {
         synchronized (this.queue) {
-            while (this.queue.size() == this.queueLimit) {
+            while (this.queue.size() == QUEUE_LIMIT) {
                 System.out.println("offer wait");
                 try {
                     this.queue.wait();
@@ -45,7 +45,7 @@ public class SimpleBlockingQueue<T> {
     /**
      * Check available element and wait fo notification.
      * @return value.
-     * @throws InterruptedException
+     * @throws InterruptedException InterruptedException.
      */
     public T poll() throws InterruptedException {
         synchronized (this.queue) {
@@ -54,8 +54,8 @@ public class SimpleBlockingQueue<T> {
                 this.queue.wait();
             }
             this.queue.notify();
+            return this.queue.poll();
         }
-        return this.queue.poll();
     }
 
     /**
