@@ -1,6 +1,7 @@
 package ru.job4j.thread;
 
 import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * Cash
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -34,14 +35,14 @@ public class Cash {
      * @param model element to update.
      */
     public void update(Base model) {
-        synchronized (this.cash) {
-            if (model.version != this.cash.get(model.id).version) {
-                throw new OptimisticException("Optimistic Exception");
-            }
-            this.cash.computeIfPresent(
-                    model.id, (integer, base) -> new Base(integer, ++base.version)
-            );
-        }
+        this.cash.computeIfPresent(
+                model.id, (integer, base) -> {
+                    if (model.version != cash.get(model.id).version) {
+                        throw new OptimisticException("Optimistic Exception");
+                    }
+                    return new Base(integer, ++base.version);
+                }
+        );
         System.out.println(this.cash.get(model.id));
     }
 
@@ -58,12 +59,4 @@ public class Cash {
         }
     }
 
-    /**
-     * Element getter.
-     * @param id id.
-     * @return element.
-     */
-    public Base getModel(int id) {
-        return this.cash.get(id);
-    }
 }
