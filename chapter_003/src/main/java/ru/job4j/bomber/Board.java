@@ -42,7 +42,7 @@ public class Board {
         new Thread(
                 () -> {
                     this.board[this.heroPos.x][this.heroPos.y].tryLock();
-                    while (true) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         for (int i = 0; i < this.board.length; i++) {
                             for (int j = 0; j < this.board.length; j++) {
                                 if (this.board[i][j].isLocked()) {
@@ -100,13 +100,11 @@ public class Board {
     public boolean move(Cell source, Cell dest) {
         boolean result = false;
         try {
-            synchronized (this.board[dest.x][dest.y]) {
-                if (this.board[dest.x][dest.y].tryLock(500, TimeUnit.MILLISECONDS)) {
-                    this.heroPos = dest;
-                    this.board[source.x][source.y].unlock();
-                    System.out.printf("Lock %s\n", dest.toString());
-                    result = true;
-                }
+            if (this.board[dest.x][dest.y].tryLock(500, TimeUnit.MILLISECONDS)) {
+                this.heroPos = dest;
+                this.board[source.x][source.y].unlock();
+                System.out.printf("Lock %s\n", dest.toString());
+                result = true;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
