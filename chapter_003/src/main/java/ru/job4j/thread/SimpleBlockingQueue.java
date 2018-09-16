@@ -16,7 +16,7 @@ public class SimpleBlockingQueue<T> {
     /**
      * Capacity.
      */
-    @GuardedBy("this")
+    @GuardedBy("this.queue")
     private final Queue<T> queue = new LinkedList<>();
     /**
      * Queue limit.
@@ -62,7 +62,12 @@ public class SimpleBlockingQueue<T> {
      * Is Queue empty.
      * @return empty.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public synchronized boolean isEmpty() {
-        return this.queue.isEmpty();
+        boolean result;
+        synchronized (this.queue) {
+            result = this.queue.isEmpty();
+        }
+        return result;
     }
 }
