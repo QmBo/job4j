@@ -9,7 +9,7 @@ import java.util.Random;
  * @version 0.1
  * @since 01.06.2018
  */
-public class Tracker {
+public class Tracker implements ITracker {
     /**
      * All Items.
      */
@@ -28,6 +28,7 @@ public class Tracker {
      * @param item item to add.
      * @return item with id.
      */
+    @Override
     public Item add(Item item) {
         item.setId(this.generateId());
         this.items.add(item);
@@ -39,6 +40,7 @@ public class Tracker {
      * @param id id.
      * @param item item.
      */
+    @Override
     public void replace(String id, Item item) {
         boolean find = false;
         for (Item task : this.items) {
@@ -58,6 +60,7 @@ public class Tracker {
      * Deleted item from array by id.
      * @param id id.
      */
+    @Override
     public void delete(String id) {
         boolean find = false;
         for (Item item : items) {
@@ -78,9 +81,10 @@ public class Tracker {
      * @param key name.
      * @return all item with name.
      */
+    @Override
     public ArrayList<Item> findByName(String key) {
         ArrayList<Item> result = new ArrayList<>();
-        for (Item item : items) {
+        for (Item item : this.items) {
             if (item.getName().equals(key)) {
                 result.add(item);
             }
@@ -96,6 +100,7 @@ public class Tracker {
      * @param id id.
      * @return all item with id.
      */
+    @Override
     public Item findById(String id) {
         Item result = null;
         boolean find = false;
@@ -116,6 +121,7 @@ public class Tracker {
      * Return copy of all items.
      * @return all items.
      */
+    @Override
     public ArrayList<Item> getAll() {
         return this.items;
     }
@@ -128,10 +134,18 @@ public class Tracker {
         return String.valueOf(System.currentTimeMillis() + RM.nextInt());
     }
 
+    /**
+     * Check is exit time.
+     * @return isExit.
+     */
+    @Override
     public boolean isExit() {
         return this.exit;
     }
-
+    /**
+     * Set exit flag true.
+     */
+    @Override
     public void timeToExit() {
         this.exit = true;
     }

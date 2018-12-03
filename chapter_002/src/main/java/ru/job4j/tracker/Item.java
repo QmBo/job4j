@@ -1,4 +1,7 @@
 package ru.job4j.tracker;
+
+import java.util.Objects;
+
 /**
  * Item class.
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -89,5 +92,33 @@ public class Item {
      */
     public long getCreated() {
         return this.created;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Item item = (Item) o;
+        return created == item.created
+                && Objects.equals(id, item.id)
+                && Objects.equals(name, item.name)
+                && Objects.equals(description, item.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, created);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Item{ id='%s' , name='%s' , description='%s' , created='%s'}",
+                this.id, this.name, this.description, this.created
+        );
     }
 }

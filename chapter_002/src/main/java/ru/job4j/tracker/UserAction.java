@@ -17,11 +17,11 @@ public interface UserAction {
      * @param input input.
      * @param tracker tracker.
      */
-    void execute(Input input, Tracker tracker);
+    void execute(Input input, ITracker tracker);
 
     /**
      * Menu information of Action.
-     * @return
+     * @return menu string.
      */
     String info();
 }
