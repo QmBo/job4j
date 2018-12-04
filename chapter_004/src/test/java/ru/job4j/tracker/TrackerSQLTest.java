@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.hamcrest.Matchers.is;
@@ -99,7 +99,7 @@ public class TrackerSQLTest {
                     1514783471000L
             );
             item.setId(tracker.add(item).getId());
-            ArrayList<Item> result = tracker.findByName("oun");
+            List<Item> result = tracker.findByName("oun");
             assertThat(result.get(result.size() - 1), is(item));
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);

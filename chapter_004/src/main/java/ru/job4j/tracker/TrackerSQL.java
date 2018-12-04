@@ -29,6 +29,13 @@ public class TrackerSQL implements ITracker, Closeable {
     private boolean exit = false;
 
     /**
+     * Constructor.
+     */
+    public TrackerSQL() {
+        this.init();
+    }
+
+    /**
      * Tack Connection.
      * @return is connecting.
      */
@@ -134,7 +141,7 @@ public class TrackerSQL implements ITracker, Closeable {
      */
     @Override
     public Item add(Item item) {
-        ArrayList<Item> result = this.sqlRequest(
+        List<Item> result = this.sqlRequest(
                 String.format(
                         "insert into item (name, description, create_time) values ('%s', '%s', %s) RETURNING *",
                         item.getName(), item.getDescription(), item.getCreated()
@@ -176,7 +183,7 @@ public class TrackerSQL implements ITracker, Closeable {
      * @return all items.
      */
     @Override
-    public ArrayList<Item> getAll() {
+    public List<Item> getAll() {
         return this.sqlRequest("select * from item");
     }
 
@@ -186,7 +193,7 @@ public class TrackerSQL implements ITracker, Closeable {
      * @return all item with name.
      */
     @Override
-    public ArrayList<Item> findByName(String key) {
+    public List<Item> findByName(String key) {
         return this.sqlRequest(String.format("select * from item where name like '%%%s%%'", key));
     }
 
@@ -197,7 +204,7 @@ public class TrackerSQL implements ITracker, Closeable {
      */
     @Override
     public Item findById(String id) {
-        ArrayList<Item> result = this.sqlRequest(String.format("select * from item where id = %s", id));
+        List<Item> result = this.sqlRequest(String.format("select * from item where id = %s", id));
         return result.isEmpty() ? null : result.get(0);
     }
 
@@ -223,9 +230,8 @@ public class TrackerSQL implements ITracker, Closeable {
      * @param sql request.
      * @return list of items at request.
      */
-    private ArrayList<Item> sqlRequest(String sql) {
-        ArrayList<Item> result = new ArrayList<>(100);
-        this.init();
+    private List<Item> sqlRequest(String sql) {
+        List<Item> result = new ArrayList<>(100);
         try (Statement st = this.connection.createStatement()) {
             try (ResultSet rs = st.executeQuery(sql)) {
                 while (rs.next()) {

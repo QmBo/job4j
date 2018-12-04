@@ -1,6 +1,6 @@
 package ru.job4j.tracker;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface ITracker {
     /**
@@ -24,13 +24,13 @@ public interface ITracker {
      * Return copy of all items.
      * @return all items.
      */
-    ArrayList<Item> getAll();
+    List<Item> getAll();
     /**
      * Find item by name.
      * @param key name.
      * @return all item with name.
      */
-    ArrayList<Item> findByName(String key);
+    List<Item> findByName(String key);
     /**
      * Find item by id.
      * @param id id.
