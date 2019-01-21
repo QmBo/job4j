@@ -25,3 +25,9 @@ hs_err_pid*
 **/target/**
 .idea
 *.iml
+
+**/*.db
+**/toTestXML.xml
+**/TestNewXML.xml
+**/MainTestXML.xml
+**/MainTestNewXML.xml
