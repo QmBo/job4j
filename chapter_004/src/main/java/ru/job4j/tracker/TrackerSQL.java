@@ -1,6 +1,5 @@
 package ru.job4j.tracker;
 
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +13,7 @@ import java.util.*;
  * @version 0.1
  * @since 03.12.2018
  */
-public class TrackerSQL implements ITracker, Closeable {
+public class TrackerSQL implements ITracker, AutoCloseable {
     /**
      * Logger.
      */
@@ -31,107 +30,8 @@ public class TrackerSQL implements ITracker, Closeable {
     /**
      * Constructor.
      */
-    public TrackerSQL() {
-        this.init();
-    }
-
-    /**
-     * Tack Connection.
-     * @return is connecting.
-     */
-    public boolean init() {
-        try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties")) {
-            Properties config = new Properties();
-            config.load(in);
-            try {
-                Class.forName(config.getProperty("driver-class-name"));
-                this.connection = DriverManager.getConnection(
-                        config.getProperty("url"),
-                        config.getProperty("username"),
-                        config.getProperty("password")
-                );
-                try (Statement st = this.connection.createStatement()) {
-                    ResultSet result = st.executeQuery("select count(*) from information_schema.tables where table_schema='public'");
-                    result.next();
-                    String tabCount = config.getProperty("tab-count");
-                    if (!result.getString("count").equals(tabCount)) {
-                        this.reInit(config, true);
-                    }
-                }
-            } catch (PSQLException pe) {
-                if (pe.getMessage().contains("\"tracker\"")) {
-                    this.reInit(config, false);
-                }
-            }
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            throw new IllegalStateException(e);
-        }
-        return this.connection != null;
-    }
-
-    /**
-     * Rebuild data base.
-     * @param config data base config.
-     * @param drop drop DB if true.
-     * @throws SQLException if bad connection.
-     */
-    private void reInit(Properties config, boolean drop) throws SQLException {
-        this.connection = DriverManager.getConnection(
-                config.getProperty("url-create"),
-                config.getProperty("username"),
-                config.getProperty("password")
-        );
-        if (drop) {
-            try (Statement st = this.connection.createStatement()) {
-                st.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'tracker'");
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            }
-            try (Statement st = this.connection.createStatement()) {
-                st.execute("DROP DATABASE tracker");
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            }
-        }
-        try (Statement st = this.connection.createStatement()) {
-            st.execute("CREATE DATABASE tracker");
-        } catch (SQLException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        this.connection = DriverManager.getConnection(
-                config.getProperty("url"),
-                config.getProperty("username"),
-                config.getProperty("password")
-        );
-        this.createTab();
-    }
-
-    /**
-     * Create DB.
-     */
-    private void createTab() {
-        try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("create.sql")) {
-            try (Statement st = this.connection.createStatement()) {
-                String line;
-                StringBuilder stringBuilder = new StringBuilder();
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
-                    line = reader.readLine();
-                    while (line != null) {
-                        stringBuilder.append(line);
-                        line = reader.readLine();
-                    }
-                }
-                String[] sql = stringBuilder.toString().split(";");
-                for (String q : sql) {
-                    st.executeUpdate(q);
-                }
-            } catch (SQLException e) {
-                LOG.error(e.getMessage(), e);
-            }
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public TrackerSQL(Connection connection) {
+        this.connection = connection;
     }
 
     /**
