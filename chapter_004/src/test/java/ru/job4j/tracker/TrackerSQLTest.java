@@ -1,8 +1,9 @@
 package ru.job4j.tracker;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import java.io.InputStream;
 import java.sql.*;
@@ -13,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class TrackerSQLTest {
-    private static final Logger LOG = LoggerFactory.getLogger(TrackerSQL.class);
+    private static final Logger LOG = LogManager.getLogger(TrackerSQL.class);
 
     public Connection init() {
         try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties")) {

@@ -1,10 +1,14 @@
 package ru.job4j.array;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Closeable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import static java.lang.String.*;
 /**
@@ -13,7 +17,9 @@ import static java.lang.String.*;
  * @version 0.1
  * @since 18.01.2019
  */
+@SuppressWarnings("ALL")
 public class StoreSQL implements Closeable {
+    private static final Logger LOG = LogManager.getLogger(StoreSQL.class);
     /**
      * Connection to SQL.
      */
@@ -44,8 +50,8 @@ public class StoreSQL implements Closeable {
                     this.config.get("username"),
                     this.config.get("password")
             );
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            LOG.error(e.getMessage());
         }
         return this.conn != null;
     }
@@ -59,18 +65,26 @@ public class StoreSQL implements Closeable {
             stmt.executeUpdate("create table if not exists entry (field integer)");
             this.checkTab();
             this.conn.setAutoCommit(false);
-            try {
+            try (PreparedStatement ps = this.conn.prepareStatement(
+                    "insert into entry (field) values (?)")) {
+                int count = 0;
+                int batchSize = 1000;
                 for (int i = 1; i <= n; i++) {
-                    stmt.execute(format("insert into entry (field) values (%s)", i));
+                    ps.setInt(1, i);
+                    ps.addBatch();
+                    if (++count % batchSize == 0) {
+                        ps.executeBatch();
+                    }
                 }
+                ps.executeBatch();
                 this.conn.commit();
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage());
                 this.conn.rollback();
             }
             this.conn.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
     }
 
@@ -87,7 +101,7 @@ public class StoreSQL implements Closeable {
                 result = rs.getInt("count");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return result;
     }
@@ -102,7 +116,7 @@ public class StoreSQL implements Closeable {
                 statement.executeUpdate("drop table entry");
                 statement.executeUpdate("create table entry (field integer)");
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage());
             }
         }
     }
@@ -119,7 +133,7 @@ public class StoreSQL implements Closeable {
                 result.add(new Entry(set.getInt("field")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
         return result;
     }
@@ -133,7 +147,7 @@ public class StoreSQL implements Closeable {
             try {
                 this.conn.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage());
             }
         }
     }

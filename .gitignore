@@ -27,7 +27,3 @@ hs_err_pid*
 *.iml
 
 **/*.db
-**/toTestXML.xml
-**/TestNewXML.xml
-**/MainTestXML.xml
-**/MainTestNewXML.xml
