@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.quartz.*;
 import java.io.IOException;
@@ -115,7 +116,7 @@ public class ParserJob implements Job {
             Document doc = Jsoup.connect(html).get();
             Elements elements = doc.getElementsByClass("postslisttopic");
             for (Element e : elements) {
-                String name = e.text();
+                String name = e.text().replace("[new]", "");
                 String link = e.select("a[href]").get(0).attr("href");
                 LOG.debug(name);
                 LOG.debug(e.select("a[href]").get(0).attr("href"));
@@ -162,11 +163,11 @@ public class ParserJob implements Job {
             SimpleDateFormat sfWriter = new SimpleDateFormat("d MMM yy", Locale.getDefault());
             Calendar calendar = new GregorianCalendar();
             if (date.startsWith("сегодня")) {
-                date = date.replaceAll("сегодня", sfWriter.format(calendar.getTime()));
+                date = date.replace("сегодня", sfWriter.format(calendar.getTime()));
                 LOG.debug("Date {}", date);
             } else if (date.startsWith("вчера")) {
                 calendar.add(Calendar.DAY_OF_MONTH, -1);
-                date = date.replaceAll("вчера", sfWriter.format(calendar.getTime()));
+                date = date.replace("вчера", sfWriter.format(calendar.getTime()));
                 LOG.debug("Date {}", date);
             }
             Date vacancyTime = sfReader.parse(date);
@@ -233,9 +234,18 @@ public class ParserJob implements Job {
         try {
             Document doc = Jsoup.connect(this.vacancy.get(name)).get();
             Elements element = doc.getElementsByClass("msgBody");
-            String text = element.get(1).childNodes().toString();
+            List<Node> dec = element.get(1).childNodes();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Node node : dec) {
+                stringBuilder.append(node.toString());
+                stringBuilder.append(" ");
+            }
+            String text = stringBuilder.toString();
+            if (text.length() > 3999) {
+                text = format("%s %s", text.substring(0, 3990), "...");
+            }
             LOG.info("Vacancy {} add text.", name);
-            LOG.debug("Text {}", element.get(1).childNodes());
+            LOG.debug("Text {}", text);
             this.decryption.put(name, text);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
