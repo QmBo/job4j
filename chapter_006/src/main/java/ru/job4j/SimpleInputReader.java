@@ -2,6 +2,7 @@ package ru.job4j;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.io.*;
 /**
  * SimpleInputReader
@@ -32,4 +33,35 @@ public class SimpleInputReader {
         }
         return result;
     }
+
+    /**
+     * Looking exception words in stream word to word and delete it.
+     * @param in input stream.
+     * @param out output stream.
+     * @param abuse exception words.
+     */
+    public void dropAbuses(InputStream in, OutputStream out, String[] abuse) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            StringBuilder word = new StringBuilder();
+            int code = br.read();
+            while (code != -1) {
+                char character = (char) code;
+                word.append(character);
+                if (character == ' ') {
+                    String outString = word.toString();
+                    if (outString.length() > 0) {
+                        for (String abu : abuse) {
+                            outString = outString.replace(abu, "");
+                        }
+                        out.write(outString.getBytes());
+                        word = new StringBuilder();
+                    }
+                }
+                code = br.read();
+            }
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+        }
+    }
 }
+
