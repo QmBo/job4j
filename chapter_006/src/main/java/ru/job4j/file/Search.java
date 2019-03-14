@@ -19,34 +19,53 @@ public class Search {
      * Find files in dir/under dir.
      * @param parent main dir to searching.
      * @param exts extends.
+     * @param include include extends.
      * @return list files.
      */
-    public List<File> files(String parent, List<String> exts) {
+    public List<File> files(String parent, List<String> exts, boolean include) {
         File file = new File(parent);
         if (file.isDirectory()) {
             for (File f : file.listFiles()) {
-                this.files(f.getPath(), exts);
+                this.files(f.getPath(), exts, include);
             }
         } else {
-            this.checkFile(file, exts);
+            this.checkFile(file, exts, include);
         }
         return this.fileList;
+    }
+
+    /**
+     * Find files in dir/under dir.
+     * @param parent main dir to searching.
+     * @param exts extends.
+     * @return list files.
+     */
+    public List<File> files(String parent, List<String> exts) {
+        return this.files(parent, exts, true);
     }
 
     /**
      * Searcher helper.
      * @param file file to check extends.
      * @param exts extends.
+     * @param include include extends.
      */
-    private void checkFile(File file, List<String> exts) {
+    private void checkFile(File file, List<String> exts, boolean include) {
         String name = file.getName();
         String[] splits = name.split("[.]");
         int last = splits.length - 1;
+        boolean found = false;
         for (String ext : exts) {
             if (ext.equals(splits[last])) {
-                this.fileList.add(file);
+                if (include) {
+                    this.fileList.add(file);
+                }
+                found = true;
                 break;
             }
+        }
+        if (!include && !found) {
+            this.fileList.add(file);
         }
     }
 }
