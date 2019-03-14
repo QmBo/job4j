@@ -1,8 +1,9 @@
 package ru.job4j.file;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * Search
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -23,12 +24,22 @@ public class Search {
      * @return list files.
      */
     public List<File> files(String parent, List<String> exts, boolean include) {
-        File file = new File(parent);
-        if (file.isDirectory()) {
-            for (File f : file.listFiles()) {
-                this.files(f.getPath(), exts, include);
+        Queue<File> queueToCheck = new LinkedBlockingQueue<>();
+        List<File> filesList = new LinkedList<>();
+        queueToCheck.add(new File(parent));
+        while (!queueToCheck.isEmpty()) {
+            File path = queueToCheck.poll();
+            if (path.isDirectory()) {
+                queueToCheck.addAll(
+                        Arrays.asList(
+                                Objects.requireNonNull(path.listFiles())
+                        )
+                );
+            } else {
+                filesList.add(path);
             }
-        } else {
+        }
+        for (File file : filesList) {
             this.checkFile(file, exts, include);
         }
         return this.fileList;
