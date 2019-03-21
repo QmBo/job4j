@@ -18,6 +18,14 @@ import java.net.Socket;
 public class Server {
     private static final Logger LOG = LogManager.getLogger(Server.class);
     /**
+     * Hello command.
+     */
+    private static final String HELLO = "hello";
+    /**
+     * Exit command.
+     */
+    private static final String EXIT = "exit";
+    /**
      * Socket.
      */
     private final Socket socket;
@@ -38,7 +46,7 @@ public class Server {
         try (Socket socket = new ServerSocket(48900).accept()) {
             new Server(socket).start();
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
     }
 
@@ -55,18 +63,18 @@ public class Server {
                 LOG.info("wait command ...");
                 ask = in.readLine();
                 LOG.info(ask);
-                if ("hello".equals(ask)) {
+                if (HELLO.equals(ask)) {
                     out.println("Hello, dear friend, I'm a oracle.");
                     out.println();
-                } else if (!"exit".equals(ask)) {
+                } else if (!EXIT.equals(ask)) {
                     out.println("Pleas repeat.");
                     out.println();
                 }
-            } while (!"exit".equals(ask));
+            } while (!EXIT.equals(ask));
             out.println("Goodbye, my dear friend.");
             out.println();
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
     }
 }

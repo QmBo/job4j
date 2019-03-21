@@ -16,6 +16,10 @@ import java.util.Scanner;
 public class Client {
     private static final Logger LOG = LogManager.getLogger(Client.class);
     /**
+     * Exit command.
+     */
+    private static final String EXIT = "exit";
+    /**
      * Socket.
      */
     private final Socket socket;
@@ -45,7 +49,7 @@ public class Client {
         ) {
             new Client(inSocket, scanner).start();
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error("error", e);
         }
     }
 
@@ -59,19 +63,18 @@ public class Client {
         ) {
             String ask;
             do {
-                String str;
                 ask = this.console.nextLine();
                 out.println(ask);
                 if (in.ready()) {
-                    str = in.readLine();
+                    String str = in.readLine();
                     while (!str.isEmpty()) {
                         System.out.println(str);
                         str = in.readLine();
                     }
                 }
-            } while (!"exit".equals(ask));
+            } while (!EXIT.equals(ask));
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error("error", e);
         }
     }
 }
