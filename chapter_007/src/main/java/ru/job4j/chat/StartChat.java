@@ -106,7 +106,7 @@ public class StartChat {
                 result = br.readLine();
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
         return result;
     }

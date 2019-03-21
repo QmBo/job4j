@@ -49,7 +49,7 @@ public class ChatLogger {
             try {
                 log.createNewFile();
             } catch (IOException e) {
-                LOG.error(e.getMessage());
+                LOG.error("message", e);
             }
         }
         return this.log;
@@ -65,7 +65,7 @@ public class ChatLogger {
                 writer.write(lines);
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
     }
 }

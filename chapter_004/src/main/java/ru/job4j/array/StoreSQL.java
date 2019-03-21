@@ -51,7 +51,7 @@ public class StoreSQL implements Closeable {
                     this.config.get("password")
             );
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error("messag", e);
         }
         return this.conn != null;
     }
@@ -79,12 +79,12 @@ public class StoreSQL implements Closeable {
                 ps.executeBatch();
                 this.conn.commit();
             } catch (SQLException e) {
-                LOG.error(e.getMessage());
+                LOG.error("messag", e);
                 this.conn.rollback();
             }
             this.conn.setAutoCommit(true);
         } catch (SQLException e) {
-            LOG.error(e.getMessage());
+            LOG.error("messag", e);
         }
     }
 
@@ -101,7 +101,7 @@ public class StoreSQL implements Closeable {
                 result = rs.getInt("count");
             }
         } catch (SQLException e) {
-            LOG.error(e.getMessage());
+            LOG.error("messag", e);
         }
         return result;
     }
@@ -116,7 +116,7 @@ public class StoreSQL implements Closeable {
                 statement.executeUpdate("drop table entry");
                 statement.executeUpdate("create table entry (field integer)");
             } catch (SQLException e) {
-                LOG.error(e.getMessage());
+                LOG.error("messag", e);
             }
         }
     }
@@ -133,7 +133,7 @@ public class StoreSQL implements Closeable {
                 result.add(new Entry(set.getInt("field")));
             }
         } catch (SQLException e) {
-            LOG.error(e.getMessage());
+            LOG.error("messag", e);
         }
         return result;
     }
@@ -147,7 +147,7 @@ public class StoreSQL implements Closeable {
             try {
                 this.conn.close();
             } catch (SQLException e) {
-                LOG.error(e.getMessage());
+                LOG.error("messag", e);
             }
         }
     }

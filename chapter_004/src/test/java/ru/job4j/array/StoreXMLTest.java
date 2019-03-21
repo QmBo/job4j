@@ -1,7 +1,5 @@
 package ru.job4j.array;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +13,8 @@ import static java.lang.String.format;
 import static org.junit.Assert.*;
 
 public class StoreXMLTest {
-    private static final Logger LOG = LogManager.getLogger(StoreXMLTest.class);
     @Test
-    public void whenListThenListToXML() {
+    public void whenListThenListToXML() throws IOException {
         String tmpDir = System.getProperty("java.io.tmpdir");
         StoreXML xml = new StoreXML(new File(format("%s/toTestXML.xml", tmpDir)));
         List<Entry> list = new ArrayList<>();
@@ -26,17 +23,7 @@ public class StoreXMLTest {
         list.add(new Entry(3));
         list.add(new Entry(4));
         xml.save(list);
-        boolean isOk = false;
-        try (
-                Stream<String> stream = Files.lines(
-                        Paths.get(format("%s/toTestXML.xml", tmpDir))
-                )
-        ) {
-            assertNotNull(stream);
-            isOk = true;
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-        }
-        assertTrue(isOk);
+        Stream<String> stream = Files.lines(Paths.get(format("%s/toTestXML.xml", tmpDir)));
+        assertNotNull(stream);
     }
 }

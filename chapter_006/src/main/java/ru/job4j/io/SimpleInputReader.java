@@ -29,7 +29,7 @@ public class SimpleInputReader {
                 result = true;
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
         return result;
     }
@@ -60,7 +60,7 @@ public class SimpleInputReader {
                 code = br.read();
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
     }
 }

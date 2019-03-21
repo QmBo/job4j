@@ -52,7 +52,7 @@ public class Answers {
                 }
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
         return this.answers;
     }

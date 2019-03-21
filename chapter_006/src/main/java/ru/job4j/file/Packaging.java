@@ -45,7 +45,7 @@ public class Packaging {
                     ), in.directory(), in.output()
             );
         } catch (Exception e) {
-            LOG.error(e.getMessage());
+            LOG.error("message", e);
         }
     }
 
