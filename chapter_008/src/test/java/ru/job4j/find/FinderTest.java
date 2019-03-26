@@ -1,4 +1,4 @@
-package ru.job4j.file;
+package ru.job4j.find;
 
 import org.junit.After;
 import org.junit.Before;
@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,11 +16,13 @@ import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-public class SearchTest {
-    private String tmp = format("%s/%s", System.getProperty("java.io.tmpdir"), "SearchTest");
+public class FinderTest {
+
+    private String tmp = format("%s/%s", System.getProperty("java.io.tmpdir"), "FinderTest");
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("read.txt", "read.log", "read.rtfm"));
-    private List<File> exp = new ArrayList<>();
-    private List<File> expNotIn = new ArrayList<>();
+    private List<File> allFiles = new ArrayList<>();
+    private List<File> readTxt = new ArrayList<>();
+    private final static String LS = System.lineSeparator();
 
     @Before
     public void setUp() throws IOException {
@@ -35,10 +38,9 @@ public class SearchTest {
             for (String name : names) {
                 File file = new File(dir, name);
                 file.createNewFile();
-                if (!name.endsWith(".rtfm")) {
-                    exp.add(file);
-                } else {
-                    expNotIn.add(file);
+                allFiles.add(file);
+                if ("read.txt".equals(name)) {
+                    readTxt.add(file);
                 }
             }
         }
@@ -59,37 +61,26 @@ public class SearchTest {
             }
             new File(dir).delete();
         }
+        new File(tmp, "test.log").delete();
         new File(tmp).delete();
     }
 
     @Test
-    public void whenSearchIncludeThen8Found() {
-        Search search = new Search();
-        List<File> res = search.files(tmp, Arrays.asList("txt", "log"));
+    public void whenFindFoolThenLog() throws IOException {
+        new Finder(
+                "read.txt",
+                tmp,
+                false,
+                "test.log"
+        ).start();
+        List<String> res = Files.readAllLines(new File(tmp, "test.log").toPath());
+        List<String> exp = new ArrayList<>();
+        for (File file : readTxt) {
+            exp.add(file.toString());
+        }
         Collections.sort(res);
         Collections.sort(exp);
-        assertThat(res.size(), is(8));
         assertThat(res, is(exp));
     }
 
-    @Test
-    public void whenSearchNotIncludeThen4Found() {
-        Search search = new Search();
-        List<File> res = search.files(tmp, Arrays.asList("txt", "log"), false);
-        Collections.sort(res);
-        Collections.sort(expNotIn);
-        assertThat(res.size(), is(4));
-        assertThat(res, is(expNotIn));
-    }
-
-    @Test
-    public void whenSearchThenReturnAllFiles() {
-        Search search = new Search();
-        List<File> res = search.files(tmp, Collections.emptyList(), false);
-        List<File> expect = new ArrayList<>(exp);
-        expect.addAll(expNotIn);
-        Collections.sort(expect);
-        Collections.sort(res);
-        assertThat(res, is(expect));
-    }
 }
