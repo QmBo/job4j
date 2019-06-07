@@ -20,10 +20,12 @@ public class CalculatorTest {
     @Test
     public void whenAddOnePlusOneThenTwo() {
         Calculator calc = new Calculator();
+        assertThat(calc.isHasResult(), is(false));
         calc.add(1D, 1D);
         double result = calc.getResult();
         double expected = 2D;
         assertThat(result, is(expected));
+        assertThat(calc.isHasResult(), is(true));
     }
 
     /**
@@ -32,10 +34,12 @@ public class CalculatorTest {
     @Test
     public void whenSubtractTenMinusSevenThenThree() {
         Calculator calc = new Calculator();
+        assertThat(calc.isHasResult(), is(false));
         calc.subtract(10D, 7D);
         double result = calc.getResult();
         double expected = 3D;
         assertThat(result, is(expected));
+        assertThat(calc.isHasResult(), is(true));
     }
 
     /**
@@ -44,10 +48,12 @@ public class CalculatorTest {
     @Test
     public void whenDivTenOnTwoThenFive() {
         Calculator calc = new Calculator();
+        assertThat(calc.isHasResult(), is(false));
         calc.div(10D, 2D);
         double result = calc.getResult();
         double expected = 5D;
         assertThat(result, is(expected));
+        assertThat(calc.isHasResult(), is(true));
     }
 
     /**
@@ -60,5 +66,6 @@ public class CalculatorTest {
         double result = calc.getResult();
         double expected = 8D;
         assertThat(result, is(expected));
+        assertThat(calc.isHasResult(), is(true));
     }
 }
