@@ -8,9 +8,11 @@ public class Calculator {
     /**
      * Result of operation.
      */
-    private double result;
-
-    private boolean hasResult = false;
+    protected double result;
+    /**
+     * Has result.
+     */
+    protected boolean hasResult = false;
 
     /**
      * Addition two numbers.

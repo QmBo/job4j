@@ -41,7 +41,7 @@ public class InteractCalc {
         new InteractCalc(
                 new ValidateInput(
                         new ConsoleInput()
-                ), new Calculator()
+                ), new TriangleCalculator()
         ).action();
     }
 
