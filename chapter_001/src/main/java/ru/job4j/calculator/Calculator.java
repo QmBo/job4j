@@ -10,6 +10,8 @@ public class Calculator {
      */
     private double result;
 
+    private boolean hasResult = false;
+
     /**
      * Addition two numbers.
      * @param first first number.
@@ -17,6 +19,7 @@ public class Calculator {
      */
     public void add(double first, double second) {
         this.result = first + second;
+        this.hasResult = true;
     }
 
     /**
@@ -26,6 +29,7 @@ public class Calculator {
      */
     public void subtract(double first, double second) {
         this.result = first - second;
+        this.hasResult = true;
     }
 
     /**
@@ -35,6 +39,7 @@ public class Calculator {
      */
     public void div(double first, double second) {
         this.result = first / second;
+        this.hasResult = true;
     }
 
     /**
@@ -44,6 +49,7 @@ public class Calculator {
      */
     public void multiple(double first, double second) {
         this.result = first * second;
+        this.hasResult = true;
     }
 
     /**
@@ -52,5 +58,9 @@ public class Calculator {
      */
     public double getResult() {
         return this.result;
+    }
+
+    public boolean isHasResult() {
+        return this.hasResult;
     }
 }
