@@ -2,6 +2,7 @@ package ru.job4j.calculator;
 
 import ru.job4j.tracker.Input;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static java.lang.String.format;
 /**
@@ -22,7 +23,7 @@ public class CalcMenu {
     /**
      * Calculator.
      */
-    private final Calculator calc;
+    private final TriangleCalculator calc;
     /**
      * Exit flag.
      */
@@ -38,7 +39,7 @@ public class CalcMenu {
      * @param calc calculator.
      */
     public CalcMenu(final Input input, final Calculator calc) {
-        this.calc = calc;
+        this.calc = (TriangleCalculator) calc;
         this.input = input;
         this.initMenu();
     }
@@ -61,6 +62,10 @@ public class CalcMenu {
         this.actions.add(new SubtractAction("Вычитание", ++pos));
         this.actions.add(new MultipleAction("Умножение", ++pos));
         this.actions.add(new DivAction("Деление", ++pos));
+        this.actions.add(new CosAction("Cos", ++pos));
+        this.actions.add(new SinAction("Sin", ++pos));
+        this.actions.add(new TanAction("Tan", ++pos));
+        this.actions.add(new CtnAction("Ctn", ++pos));
     }
 
     /**
@@ -199,6 +204,70 @@ public class CalcMenu {
             double second = ask("Введите делитель.");
             calc.div(first, second);
             System.out.println(format("%s / %s = %s", first, second, calc.getResult()));
+        }
+    }
+
+    /**
+     * Cos.
+     */
+    private class CosAction extends BaseCalcAction {
+        protected CosAction(final String name, final int kay) {
+            super(name, kay);
+        }
+
+        @Override
+        public void execute() {
+            double first = ask("Введите угол в градусах.");
+            calc.cosines(first);
+            System.out.println(format("Cos %s° = %s", first, calc.getResult()));
+        }
+    }
+
+    /**
+     * Sin.
+     */
+    private class SinAction extends BaseCalcAction {
+        protected SinAction(final String name, final int kay) {
+            super(name, kay);
+        }
+
+        @Override
+        public void execute() {
+            double first = ask("Введите угол в градусах.");
+            calc.sinus(first);
+            System.out.println(format("Sin %s° = %s", first, calc.getResult()));
+        }
+    }
+
+    /**
+     * Tan.
+     */
+    private class TanAction extends BaseCalcAction {
+        protected TanAction(final String name, final int kay) {
+            super(name, kay);
+        }
+
+        @Override
+        public void execute() {
+            double first = ask("Введите угол в градусах.");
+            calc.tang(first);
+            System.out.println(format(Locale.ENGLISH, "Tan %s° =%.1f", first, calc.getResult()));
+        }
+    }
+
+    /**
+     * Ctn.
+     */
+    private class CtnAction extends BaseCalcAction {
+        protected CtnAction(final String name, final int kay) {
+            super(name, kay);
+        }
+
+        @Override
+        public void execute() {
+            double first = ask("Введите угол в градусах.");
+            calc.cotangent(first);
+            System.out.println(format(Locale.ENGLISH, "Ctn %s° = %.1f", first, calc.getResult()));
         }
     }
 }
