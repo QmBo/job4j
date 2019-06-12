@@ -14,8 +14,6 @@ public class Calculator {
      */
     protected boolean hasResult = false;
 
-    private boolean hasResult = false;
-
     /**
      * Addition two numbers.
      * @param first first number.
