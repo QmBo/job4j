@@ -1,7 +1,6 @@
 package ru.job4j.products;
 
 import java.util.Date;
-import java.util.HashSet;
 /**
  * Shop
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -10,28 +9,21 @@ import java.util.HashSet;
  */
 public class Shop extends Stock {
     /**
-     * Sort strategy.
-     * @param date date to sort.
-     * @param firstStock warehouse stock.
-     * @param secondStock trash stock.
+     * Food validator.
+     * @param food food.
+     * @param date date of validation.
+     * @return is accept.
      */
     @Override
-    public void sort(Date date, Stock firstStock, Stock secondStock) {
-        HashSet<Food> trash = new HashSet<>(100);
-        HashSet<Food> warehouse = new HashSet<>(100);
-        this.capacity.forEach(food -> {
-            long wear = food.productWear(date);
-            if (wear > 100D) {
-                trash.add(food);
-            } else if (wear >= 75D) {
+    public boolean accept(Food food, Date date) {
+        boolean result = false;
+        long wear = food.productWear(date);
+        if (wear > 25D && wear < 100D) {
+            result = true;
+            if (wear >= 75D) {
                 food.setDiscount(50D);
-            } else if (wear <= 25D) {
-                warehouse.add(food);
             }
-        });
-        firstStock.add(warehouse);
-        secondStock.add(trash);
-        this.capacity.removeAll(warehouse);
-        this.capacity.removeAll(trash);
+        }
+        return result;
     }
 }

@@ -1,6 +1,7 @@
 package ru.job4j.products;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 /**
  * Stock
@@ -28,5 +29,21 @@ public abstract class Stock implements Strategy {
      */
     public Set<Food> getStock() {
         return this.capacity;
+    }
+
+    /**
+     * Add food to capacity.
+     * @param food food.
+     */
+    public void add(Food food) {
+        this.capacity.add(food);
+    }
+
+    /**
+     * Remove list from capacity.
+     * @param list list of food.
+     */
+    public void removeAll(List<Food> list) {
+        this.capacity.removeAll(list);
     }
 }

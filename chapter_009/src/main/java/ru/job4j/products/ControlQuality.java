@@ -1,6 +1,9 @@
 package ru.job4j.products;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * ControlQuality
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -13,38 +16,35 @@ public class ControlQuality {
      */
     private final Date date;
     /**
-     * Warehouse store.
+     * Stock store.
      */
-    private final Warehouse warehouse;
-    /**
-     * Shop store.
-     */
-    private final Shop shop;
-    /**
-     * Trash store.
-     */
-    private final Trash trash;
+    private final Stock stock;
 
     /**
      * Constructor.
      * @param date calculate date.
-     * @param warehouse warehouse store.
-     * @param shop shop store.
-     * @param trash trash store.
      */
-    public ControlQuality(final Date date, Warehouse warehouse, Shop shop, Trash trash) {
+    public ControlQuality(final Date date, Stock stock) {
         this.date = date;
-        this.warehouse = warehouse;
-        this.shop = shop;
-        this.trash = trash;
+        this.stock = stock;
     }
 
     /**
      * Quality check.
      */
-    public void checkQuality() {
-        this.warehouse.sort(this.date, this.shop, this.trash);
-        this.trash.sort(this.date, this.warehouse, this.shop);
-        this.shop.sort(this.date, this.warehouse, this.trash);
+    public List<Food> checkQuality(List<Food> inputFood) {
+        List<Food> notAccept = new LinkedList<>();
+        inputFood.addAll(this.stock.getStock());
+        inputFood.forEach(food -> {
+            if (this.stock.accept(food, this.date)) {
+                this.stock.add(food);
+            } else {
+                notAccept.add(food);
+            }
+        });
+        if (!notAccept.isEmpty()) {
+            this.stock.removeAll(notAccept);
+        }
+        return notAccept;
     }
 }

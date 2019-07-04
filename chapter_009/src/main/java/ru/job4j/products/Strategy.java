@@ -9,10 +9,10 @@ import java.util.Date;
  */
 public interface Strategy {
     /**
-     * Sort strategy.
-     * @param date date to sort.
-     * @param firstStock other stock.
-     * @param secondStock other stock.
+     * Food validator.
+     * @param food food.
+     * @param date date of validation.
+     * @return is accept.
      */
-    void sort(Date date, Stock firstStock, Stock secondStock);
+    boolean accept(Food food, Date date);
 }
