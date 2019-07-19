@@ -14,8 +14,9 @@ public class MilkFood extends Food {
      * @param expireDate expire date.
      * @param createDate create date.
      * @param price product price.
+     * @param canRecycle is cdn be recycled.
      */
-    public MilkFood(String name, Date expireDate, Date createDate, double price) {
-        super(name, expireDate, createDate, price);
+    public MilkFood(String name, Date expireDate, Date createDate, double price, boolean canRecycle) {
+        super(name, expireDate, createDate, price, canRecycle);
     }
 }

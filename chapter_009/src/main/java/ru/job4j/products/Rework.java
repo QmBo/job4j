@@ -2,12 +2,12 @@ package ru.job4j.products;
 
 import java.util.Date;
 /**
- * Trash
+ * Rework
  * @author Victor Egorov (qrioflat@gmail.com).
  * @version 0.1
- * @since 19.06.2019
+ * @since 19.07.2019
  */
-public class Trash extends Stock {
+public class Rework extends Stock {
     /**
      * Food validator.
      * @param food food.
@@ -18,9 +18,8 @@ public class Trash extends Stock {
     public boolean accept(Food food, Date date) {
         boolean result = false;
         if (food.productWear(date) >= 100D) {
-            result = !food.isCanRecycle();
+            result = food.isCanRecycle();
         }
         return result;
     }
-
 }

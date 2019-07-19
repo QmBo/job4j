@@ -2,12 +2,12 @@ package ru.job4j.products;
 
 import java.util.Date;
 /**
- * Trash
+ * RefrigeratorWH
  * @author Victor Egorov (qrioflat@gmail.com).
  * @version 0.1
- * @since 19.06.2019
+ * @since 19.07.2019
  */
-public class Trash extends Stock {
+public class RefrigeratorWH extends Stock {
     /**
      * Food validator.
      * @param food food.
@@ -17,10 +17,9 @@ public class Trash extends Stock {
     @Override
     public boolean accept(Food food, Date date) {
         boolean result = false;
-        if (food.productWear(date) >= 100D) {
-            result = !food.isCanRecycle();
+        if (food.productWear(date) <= 25D && food.keepRefrigerated) {
+            result = this.havePlace();
         }
         return result;
     }
-
 }

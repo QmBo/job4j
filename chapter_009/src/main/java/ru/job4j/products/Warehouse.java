@@ -8,6 +8,14 @@ import java.util.Date;
  * @since 19.06.2019
  */
 public class Warehouse extends Stock {
+    public Warehouse() {
+        super();
+    }
+
+    public Warehouse(int sizeLimit) {
+        super(sizeLimit);
+    }
+
     /**
      * Food validator.
      * @param food food.
@@ -16,6 +24,10 @@ public class Warehouse extends Stock {
      */
     @Override
     public boolean accept(Food food, Date date) {
-        return food.productWear(date) <= 25D;
+        boolean result = false;
+        if (food.productWear(date) <= 25D && !food.keepRefrigerated) {
+            result = this.havePlace();
+        }
+        return result;
     }
 }
