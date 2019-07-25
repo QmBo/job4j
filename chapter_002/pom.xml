@@ -11,7 +11,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>chapter_002</artifactId>
-
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>13-ea+10</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

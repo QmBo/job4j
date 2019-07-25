@@ -11,7 +11,26 @@
         <artifactId>junior</artifactId>
         <version>2.0</version>
     </parent>
+    <properties>
+        <jaxb.api.version>2.3.0</jaxb.api.version>
+    </properties>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jaxb.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb.api.version}</version>
+        </dependency>
         <dependency>
             <groupId>ru.job4j</groupId>
             <artifactId>chapter_002</artifactId>
