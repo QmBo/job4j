@@ -14,11 +14,11 @@ public class ControlQuality {
     /**
      * Calculate date.
      */
-    private final Date date;
+    protected final Date date;
     /**
      * Stock store.
      */
-    private final Stock stock;
+    protected final Stock stock;
 
     /**
      * Constructor.

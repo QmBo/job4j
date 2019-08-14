@@ -16,11 +16,7 @@ public class Trash extends Stock {
      */
     @Override
     public boolean accept(Food food, Date date) {
-        boolean result = false;
-        if (food.productWear(date) >= 100D) {
-            result = !food.isCanRecycle();
-        }
-        return result;
+        return food.productWear(date) >= 100D;
     }
 
 }
