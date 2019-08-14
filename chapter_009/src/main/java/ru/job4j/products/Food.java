@@ -1,6 +1,8 @@
 package ru.job4j.products;
 
 import java.util.Date;
+import java.util.Objects;
+
 /**
  * Food
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -29,17 +31,27 @@ public class Food implements Comparable<Food> {
      */
     private double discount;
     /**
+     * Can recycled.
+     */
+    private final boolean canRecycle;
+    /**
+     * Keep refrigerated.
+     */
+    protected boolean keepRefrigerated = false;
+    /**
      * Constructor.
      * @param name product name.
      * @param expireDate expire date.
      * @param createDate create date.
      * @param price product price.
+     * @param canRecycle is cdn be recycled.
      */
-    public Food(String name, Date expireDate, Date createDate, double price) {
+    public Food(String name, Date expireDate, Date createDate, double price, boolean canRecycle) {
         this.name = name;
         this.expireDate = expireDate;
         this.createDate = createDate;
         this.price = price;
+        this.canRecycle = canRecycle;
         this.discount = 0D;
     }
 
@@ -75,8 +87,16 @@ public class Food implements Comparable<Food> {
      * @return compare result.
      */
     @Override
-    public int compareTo(@SuppressWarnings("NullableProblems") Food o) {
+    public int compareTo(Food o) {
         return this.name.compareTo(o.getName());
+    }
+
+    /**
+     * Recycle getter.
+     * @return is cdn be recycled.
+     */
+    public boolean isCanRecycle() {
+        return this.canRecycle;
     }
 
     @Override
@@ -88,41 +108,28 @@ public class Food implements Comparable<Food> {
             return false;
         }
         Food food = (Food) o;
-        if (Double.compare(food.price, price) != 0) {
-            return false;
-        }
-        if (Double.compare(food.discount, discount) != 0) {
-            return false;
-        }
-        if (!name.equals(food.name)) {
-            return false;
-        }
-        if (!expireDate.equals(food.expireDate)) {
-            return false;
-        }
-        return createDate.equals(food.createDate);
+        return Double.compare(food.price, price) == 0
+                && Double.compare(food.discount, discount) == 0
+                && canRecycle == food.canRecycle
+                && name.equals(food.name)
+                && expireDate.equals(food.expireDate)
+                && createDate.equals(food.createDate);
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = name.hashCode();
-        result = 31 * result + expireDate.hashCode();
-        result = 31 * result + createDate.hashCode();
-        temp = Double.doubleToLongBits(price);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(discount);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+        return Objects.hash(name, expireDate, createDate, price, discount, canRecycle);
     }
 
     @Override
     public String toString() {
-        return "Food{" + "name='" + name + '\'' + ", expireDate="
-                + expireDate + ", createDate="
-                + createDate + ", price="
-                + price + ", discount="
-                + discount + '}';
+        return "Food{"
+                + "name='" + name + '\''
+                + ", expireDate=" + expireDate
+                + ", createDate=" + createDate
+                + ", price=" + price
+                + ", discount=" + discount
+                + ", canRecycle=" + canRecycle
+                + '}';
     }
 }

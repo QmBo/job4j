@@ -2,20 +2,12 @@ package ru.job4j.products;
 
 import java.util.Date;
 /**
- * Warehouse
+ * Rework
  * @author Victor Egorov (qrioflat@gmail.com).
  * @version 0.1
- * @since 19.06.2019
+ * @since 19.07.2019
  */
-public class Warehouse extends Stock {
-    public Warehouse() {
-        super();
-    }
-
-    public Warehouse(int sizeLimit) {
-        super(sizeLimit);
-    }
-
+public class Rework extends Stock {
     /**
      * Food validator.
      * @param food food.
@@ -25,8 +17,8 @@ public class Warehouse extends Stock {
     @Override
     public boolean accept(Food food, Date date) {
         boolean result = false;
-        if (food.productWear(date) <= 25D && !food.keepRefrigerated) {
-            result = this.havePlace();
+        if (food.productWear(date) >= 100D) {
+            result = food.isCanRecycle();
         }
         return result;
     }

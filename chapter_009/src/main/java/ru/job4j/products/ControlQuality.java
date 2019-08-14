@@ -14,11 +14,11 @@ public class ControlQuality {
     /**
      * Calculate date.
      */
-    private final Date date;
+    protected final Date date;
     /**
      * Stock store.
      */
-    private final Stock stock;
+    protected final Stock stock;
 
     /**
      * Constructor.
@@ -32,9 +32,16 @@ public class ControlQuality {
     /**
      * Quality check.
      */
+    public List<Food> checkQuality() {
+        return this.checkQuality(new LinkedList<>());
+    }
+
+    /**
+     * Quality check.
+     */
     public List<Food> checkQuality(List<Food> inputFood) {
         List<Food> notAccept = new LinkedList<>();
-        inputFood.addAll(this.stock.getStock());
+        inputFood.addAll(this.stock.removeAll());
         inputFood.forEach(food -> {
             if (this.stock.accept(food, this.date)) {
                 this.stock.add(food);
