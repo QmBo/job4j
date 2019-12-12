@@ -1,81 +1,54 @@
 package ru.job4j.menu;
 
-import com.google.common.base.Joiner;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Menu
  * @author Victor Egorov (qrioflat@gmail.com).
  * @version 0.1
- * @since 22.07.2019
+ * @since 12.12.2019
  */
-public class Menu implements Out, Work {
+public class Menu {
     /**
-     * Position.
+     * Menu items capacity.
      */
-    private final int pos;
-    /**
-     * Name.
-     */
-    private final String name;
-    /**
-     * Parent.
-     */
-    private Menu parent;
+    private final Item items;
 
     /**
      * Constructor.
-     * @param pos position.
-     * @param name name.
+     * @param item menu items.
      */
-    public Menu(final int pos, final String name) {
-        this(pos, name, null);
+    public Menu(final Item item) {
+        this.items = item;
     }
 
     /**
-     * Constructor.
-     * @param pos position.
-     * @param name name.
-     * @param parent parent.
+     * Print Menu.
      */
-    public Menu(final int pos, final String name, final Menu parent) {
-        this.pos = pos;
-        this.name = name;
-        this.parent = parent;
+    public void printMenu() {
+        items.showName();
     }
 
     /**
-     * Position getter.
-     * @return true position.
+     * Menu capacity.
      */
-    public String getPosition() {
-        StringBuilder result = new StringBuilder(this.pos);
-        if (this.parent != null) {
-            result.insert(0, ".");
-            result.insert(0, this.parent.getPosition());
-        }
-        result.append(this.pos);
-        return result.toString();
+    private List<Item> menu = new ArrayList<>(100);
+
+    /**
+     * Menu init.
+     */
+    public int initMenu() {
+        this.menu = this.items.getItems();
+        return this.menu.size();
     }
 
     /**
-     * Name printer.
-     * @return position and name.
+     * Action.
+     * @param key menu key.
+     * @throws IllegalStateException if not supported.
      */
-    @Override
-    public String printName() {
-        return Joiner.on(" ").join(this.getPosition(), this.name);
-    }
-
-    /**
-     * @throws IllegalStateException Not supported.
-     */
-    @Override
-    public String printWork() throws IllegalStateException {
-        throw new IllegalStateException("Not supported.");
-    }
-
-    @Override
-    public String toString() {
-        return this.printName();
+    public String action(int key) throws IllegalStateException {
+        return this.menu.get(key).printWork();
     }
 }
