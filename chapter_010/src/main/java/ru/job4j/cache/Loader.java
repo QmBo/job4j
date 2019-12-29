@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -26,20 +25,35 @@ public class Loader extends Cache<String> {
      * @return string from cache.
      */
     @Override
-    public String getCache(String name) {
-        String result = "";
-        if (!this.capacity.containsKey(name)) {
-            try (Stream<String> lines = Files.lines(Path.of(name))) {
-                result = Joiner.on(LS).join(lines.toArray());
-                System.out.println("LOAD");
-                this.newItem(name, new Item<>(result));
-            } catch (IOException e) {
-                LOG.error("message", e);
-            }
+    public String getCache(final String name) {
+        Item<String> item;
+        String result;
+        if (!this.capacity.containsKey(name) || this.capacity.get(name).get() == null) {
+            item = this.load(name);
+            result = item.getObject();
         } else {
-            Item<String> item = this.capacity.get(name).get();
-            result = Objects.requireNonNull(item).getObject();
-            System.out.println("RECall");
+            item = this.capacity.get(name).get();
+            if (item == null) {
+                item = load(name);
+            }
+            result = item.getObject();
+        }
+        return result;
+    }
+
+    /**
+     * Cache loader.
+     * @param name fil name.
+     * @return load item.
+     */
+    private Item<String> load(final String name) {
+        Item<String> result = null;
+        try (Stream<String> lines = Files.lines(Path.of(name))) {
+            String joinLines = Joiner.on(LS).join(lines.toArray());
+            result = new Item<>(joinLines);
+            this.newItem(name, new Item<>(joinLines));
+        } catch (IOException e) {
+            LOG.error("message", e);
         }
         return result;
     }
