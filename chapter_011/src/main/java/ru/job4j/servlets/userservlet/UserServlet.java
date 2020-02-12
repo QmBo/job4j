@@ -1,5 +1,6 @@
 package ru.job4j.servlets.userservlet;
 
+import com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,18 +9,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class UserServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserServlet.class);
+    private static final String UR = "Uncorrected Request!";
+    private static final String UPDATE_TO = "User update to:";
+    private static final String UNF = "Users not Found!";
+    private static final String ANU = "Add new";
+    private static final String DELETE = "Deleted";
     private static final String ID = "id";
     private static final String ADD = "add";
     private static final String ALL = "all";
     private static final String TYPE = "text/html";
     private static final String DEL = "del";
     private static final String UPDATE = "update";
+    private static final String LS = "<br>";
     private final ValidateService logic = ValidateService.getInstance();
     private final Map<String, Function<HttpServletRequest, String>> getDispatch = new HashMap<>();
     private final Map<String, Function<HttpServletRequest, String>> postDispatch = new HashMap<>();
@@ -71,40 +77,75 @@ public class UserServlet extends HttpServlet {
      * Update User.
      * @return answer.
      */
-    private Function<HttpServletRequest, String> update() {
-        return this.logic::update;
+    public Function<HttpServletRequest, String> update() {
+        return req -> {
+            String result = UNF;
+            User user = this.logic.update(req);
+            if (user != null) {
+                result = Joiner.on(" ").join(UPDATE_TO, user);
+            }
+            return result;
+        };
     }
 
     /**
      * Delete User.
      * @return answer.
      */
-    private Function<HttpServletRequest, String> delete() {
-        return this.logic::delete;
+    public Function<HttpServletRequest, String> delete() {
+        return req -> {
+            User user = this.logic.delete(req);
+            String result = UNF;
+            if (user != null) {
+                result = Joiner.on(" ").join(DELETE, user);
+            }
+            return result;
+        };
     }
 
     /**
      * Add new User.
      * @return answer.
      */
-    private Function<HttpServletRequest, String> add() {
-        return this.logic::add;
+    public Function<HttpServletRequest, String> add() {
+        return req -> {
+            User user = this.logic.add(req);
+            String result = UR;
+            if (user != null) {
+               result = Joiner.on(" ").join(ANU, user);
+            }
+            return result;
+        };
     }
 
     /**
      * Find User by id.
      * @return answer.
      */
-    private Function<HttpServletRequest, String> findById() {
-        return this.logic::findById;
+    public Function<HttpServletRequest, String> findById() {
+        return req -> {
+            User user = this.logic.findById(req);
+            String result = UNF;
+            if (user != null) {
+                result = user.toString();
+            }
+            return result;
+        };
     }
 
     /**
      * Find all User.
      * @return answer.
      */
-    private Function<HttpServletRequest, String> findAll() {
-        return this.logic::findAll;
+    public Function<HttpServletRequest, String> findAll() {
+        return req -> {
+            Set<User> users = this.logic.findAll();
+            String result = UNF;
+            if (!users.isEmpty()) {
+                result = Joiner.on(LS).join(users);
+            }
+            return result;
+        };
     }
 
     /**
