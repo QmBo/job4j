@@ -9,13 +9,11 @@ import java.util.Set;
  * @since 05.02.2020
  */
 public class ValidateService {
-    private static final String UPDATE = "update";
     private static final String ID = "id";
     private static final String DEL = "del";
     private static final String NAME = "name";
     private static final String EMAIL = "email";
     private static final String LOGIN = "login";
-    private static final String LS = "<br>";
     private static final ValidateService SERVICE = new ValidateService();
     private final Store logic = MemoryStore.getInstance();
 
@@ -39,16 +37,12 @@ public class ValidateService {
      * @return answer
      */
     public User add(final HttpServletRequest req) {
-        User result = null;
-        if (req.getParameterMap().size() == 4) {
-            User user = new User(
-                    req.getParameter(NAME),
-                    req.getParameter(EMAIL),
-                    req.getParameter(LOGIN)
-            );
-            result = this.logic.add(user);
-        }
-        return result;
+        User user = new User(
+                req.getParameter(NAME),
+                req.getParameter(EMAIL),
+                req.getParameter(LOGIN)
+        );
+        return this.logic.add(user);
     }
 
     /**
@@ -84,18 +78,15 @@ public class ValidateService {
      */
     public User update(final HttpServletRequest req) {
         User result = null;
-        if (req.getParameterMap().size() == 4) {
-            String id = req.getParameter(UPDATE);
-            User oldUser = this.logic.findById(new User().setId(id));
-            if (oldUser != null) {
-                User user = new User(
-                        req.getParameter(NAME),
-                        req.getParameter(EMAIL),
-                        req.getParameter(LOGIN)
-                ).setId(req.getParameter(UPDATE));
-                result = this.logic.update(user);
-
-            }
+        String id = req.getParameter(ID);
+        User oldUser = this.logic.findById(new User().setId(id));
+        if (oldUser != null) {
+            User user = new User(
+                    req.getParameter(NAME),
+                    req.getParameter(EMAIL),
+                    req.getParameter(LOGIN)
+            ).setId(id);
+            result = this.logic.update(user);
         }
         return result;
     }

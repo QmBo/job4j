@@ -90,7 +90,7 @@ public class UserServletTest {
     public void whenUpdateThenUserUpdated() {
         UserServlet service = new UserServlet();
         addUser(service);
-        when(request.getParameter(UPDATE)).thenReturn("1");
+        when(request.getParameter(UPDATE)).thenReturn("");
         when(request.getParameter(NAME)).thenReturn("1");
         when(request.getParameter(LOGIN)).thenReturn("1");
         when(request.getParameter(EMAIL)).thenReturn("1");

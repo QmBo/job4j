@@ -127,4 +127,28 @@ public class User implements Comparable<User> {
         }
         return result;
     }
+
+    /**
+     * Email getter.
+     * @return users email
+     */
+    public String getEmail() {
+        return this.eMail;
+    }
+
+    /**
+     * Login getter.
+     * @return users getter
+     */
+    public String getLogin() {
+        return this.login;
+    }
+
+    /**
+     * Name getter.
+     * @return users name
+     */
+    public String getName() {
+        return this.name;
+    }
 }
