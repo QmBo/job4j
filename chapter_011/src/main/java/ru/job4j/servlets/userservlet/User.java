@@ -151,4 +151,12 @@ public class User implements Comparable<User> {
     public String getName() {
         return this.name;
     }
+
+    /**
+     * Create date getter.
+     * @return user create date
+     */
+    public Date getCreateDate() {
+        return this.createDate;
+    }
 }

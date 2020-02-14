@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
+
+import static java.lang.String.format;
+
 /**
  * UsersServlet
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -34,11 +37,9 @@ public class UsersServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType(TYPE);
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            this.deleteUser(req);
-            writer.append(this.userTab());
-            writer.flush();
+        this.deleteUser(req);
+        try {
+            resp.sendRedirect(format("%s/", req.getContextPath()));
         } catch (IOException e) {
             LOG.error("IOException", e);
         }

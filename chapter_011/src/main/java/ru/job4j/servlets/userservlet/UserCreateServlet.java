@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static java.lang.String.format;
+
 /**
  * UserCreateServlet
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -23,7 +26,7 @@ public class UserCreateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType(TYPE);
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(this.createUserForm());
+            writer.append(this.createUserForm(req));
             writer.flush();
         } catch (IOException e) {
             LOG.error("IOException", e);
@@ -32,11 +35,9 @@ public class UserCreateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType(TYPE);
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            this.addUser(req);
-            writer.append(this.createUserForm());
-            writer.flush();
+        this.addUser(req);
+        try {
+            resp.sendRedirect(format("%s/", req.getContextPath()));
         } catch (IOException e) {
             LOG.error("IOException", e);
         }
@@ -54,7 +55,7 @@ public class UserCreateServlet extends HttpServlet {
      * Page to add user.
      * @return page
      */
-    protected String createUserForm() {
+    protected String createUserForm(final HttpServletRequest req) {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html><html lang=\"en\">");
         sb.append("<head><meta charset=\"UTF-8\"><title>Users</title></head><body>");
@@ -75,7 +76,9 @@ public class UserCreateServlet extends HttpServlet {
         sb.append("</td></tr><tr><td>");
         sb.append("<input type=\"submit\" value=\"Create\"></form>");
         sb.append("</td><td>");
-        sb.append("<form action=\"list\"><button>Users list</button></form>");
+        sb.append("<form action=\"");
+        sb.append(req.getContextPath());
+        sb.append("\"><button>Users list</button></form>");
         sb.append("</td></tr>");
         sb.append("</table>");
         sb.append("</body></html>");

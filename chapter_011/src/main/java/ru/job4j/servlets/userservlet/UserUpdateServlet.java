@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import static java.lang.String.format;
+
 /**
  * UserUpdateServlet
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -33,11 +36,9 @@ public class UserUpdateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType(TYPE);
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+        try {
             this.update(req);
-            writer.append(this.updatePage(req));
-            writer.flush();
+            resp.sendRedirect(format("%s/edit/?id=%s", req.getContextPath(), req.getParameter("id")));
         } catch (IOException e) {
             LOG.error("IOException", e);
         }
@@ -84,7 +85,9 @@ public class UserUpdateServlet extends HttpServlet {
             sb.append("</td></tr><tr><td>");
             sb.append("<input type=\"submit\" value=\"Edit\"></form>");
             sb.append("</td><td>");
-            sb.append("<form action=\"list\"><button>Users list</button></form>");
+            sb.append("<form action=\"");
+            sb.append(req.getContextPath());
+            sb.append("\"><button>Users list</button></form>");
             sb.append("</td></tr>");
             sb.append("</table>");
         } else {
