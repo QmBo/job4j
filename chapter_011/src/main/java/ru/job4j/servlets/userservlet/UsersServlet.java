@@ -27,7 +27,8 @@ public class UsersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType(TYPE);
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+        try {
+            PrintWriter writer = new PrintWriter(resp.getOutputStream());
             writer.append(this.userTab());
             writer.flush();
         } catch (IOException e) {

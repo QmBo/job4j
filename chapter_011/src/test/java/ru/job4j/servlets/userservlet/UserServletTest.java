@@ -8,14 +8,10 @@ import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import static java.lang.String.format;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 
 public class UserServletTest {
@@ -39,33 +35,39 @@ public class UserServletTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    private void addUser(UserServlet service) {
+    private String addUser(UserServlet service) {
         when(request.getParameter(NAME)).thenReturn("Test");
         when(request.getParameter(LOGIN)).thenReturn("Test");
         when(request.getParameter(EMAIL)).thenReturn("Test");
-        Map<String, String[]> map = new HashMap<>();
-        map.put(ID, new String[]{""});
-        map.put(NAME, new String[]{""});
-        map.put(LOGIN, new String[]{""});
-        map.put(EMAIL, new String[]{""});
-        when(request.getParameterMap()).thenReturn(map);
-        service.add().apply(request);
+        String result = service.add().apply(request);
+        int start = result.indexOf("id='") + 4;
+        int end = result.indexOf("'", start);
+        return result.substring(start, end);
+    }
+
+    private void delete(UserServlet service, String id) {
+        when(request.getParameter(DEL)).thenReturn(id);
+        service.delete().apply(request);
     }
 
     @Test
     public void whenAddThenAddUser() {
         UserServlet service = new UserServlet();
-        addUser(service);
+        String id = addUser(service);
         String exp = Joiner.on(" ").join(ANU, "User{id='");
-        assertThat(service.add().apply(request), is(startsWith(exp)));
+        String result = service.add().apply(request);
+        assertThat(result, is(startsWith(exp)));
+        int start = result.indexOf("id='") + 4;
+        int end = result.indexOf("'", start);
+        delete(service, result.substring(start, end));
+        delete(service, id);
     }
 
     @Test
     public void whenDeleteThenDeleteUser() {
         UserServlet service = new UserServlet();
-        addUser(service);
-        addUser(service);
-        when(request.getParameter(DEL)).thenReturn("1");
+        String id = addUser(service);
+        when(request.getParameter(DEL)).thenReturn(id);
         String exp = Joiner.on(" ").join(DELETE, "User{id='");
         assertThat(service.delete().apply(request), is(startsWith(exp)));
     }
@@ -73,29 +75,37 @@ public class UserServletTest {
     @Test
     public void whenUncorrectedIdThenUNF() {
         UserServlet service = new UserServlet();
-        addUser(service);
-        when(request.getParameter(ID)).thenReturn("test");
+        when(request.getParameter(ID)).thenReturn("-9999");
         assertThat(service.findById().apply(request), is(UNF));
     }
 
     @Test
     public void whenFindAllThenAllUsersPrint() {
         UserServlet service = new UserServlet();
-        addUser(service);
-        addUser(service);
-        assertThat(service.findAll().apply(request), allOf(startsWith("User{id='"), containsString(LS + "User{id='")));
+        String firstId = addUser(service);
+        String secondId = addUser(service);
+        assertThat(
+                service.findAll().apply(request),
+                allOf(
+                        containsString(format("User{id='%s'", firstId)),
+                        containsString(format("%sUser{id='%s'", LS, secondId))
+                )
+        );
+        delete(service, firstId);
+        delete(service, secondId);
     }
 
     @Test
     public void whenUpdateThenUserUpdated() {
         UserServlet service = new UserServlet();
-        addUser(service);
+        String id = addUser(service);
         when(request.getParameter(UPDATE)).thenReturn("");
         when(request.getParameter(NAME)).thenReturn("1");
         when(request.getParameter(LOGIN)).thenReturn("1");
         when(request.getParameter(EMAIL)).thenReturn("1");
-        when(request.getParameter(ID)).thenReturn("1");
-        String mask = Joiner.on(" ").join(UPDATE_TO, "User{id='1");
+        when(request.getParameter(ID)).thenReturn(id);
+        String mask = Joiner.on(" ").join(UPDATE_TO, "User{id='");
         assertThat(service.update().apply(request), is(startsWith(mask)));
+        delete(service, id);
     }
 }

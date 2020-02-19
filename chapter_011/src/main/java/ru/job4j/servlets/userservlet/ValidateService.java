@@ -15,7 +15,7 @@ public class ValidateService {
     private static final String EMAIL = "email";
     private static final String LOGIN = "login";
     private static final ValidateService SERVICE = new ValidateService();
-    private final Store logic = MemoryStore.getInstance();
+    private final Store logic = DbStore.getInstance();
 
     /**
      * Private constructor.

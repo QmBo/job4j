@@ -33,7 +33,8 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType(TYPE);
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+        try {
+            PrintWriter writer = new PrintWriter(resp.getOutputStream());
             writer.append(this.request(this.getDispatcherInit(), req));
             writer.flush();
         } catch (IOException e) {
@@ -44,7 +45,8 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         resp.setContentType(TYPE);
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+        try {
+            PrintWriter writer = new PrintWriter(resp.getOutputStream());
             writer.append(this.request(this.postDispatcherInit(), req));
             writer.flush();
         } catch (IOException e) {
