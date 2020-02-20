@@ -7,7 +7,6 @@ import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -17,6 +16,7 @@ public class UsersServletTest {
     private static final String NAME = "name";
     private static final String EMAIL = "email";
     private static final String LOGIN = "login";
+    private static final String DEL = "del";
 
     @Mock
     HttpServletRequest request;
@@ -37,14 +37,12 @@ public class UsersServletTest {
         when(secondRequest.getParameter(EMAIL)).thenReturn("Super@email");
         when(secondRequest.getParameter(LOGIN)).thenReturn("2");
         ValidateService service = ValidateService.getInstance();
-        UsersServlet list = new UsersServlet();
-        UserUpdateServlet update = new UserUpdateServlet();
         User user = service.add(request);
         when(request.getParameter(ID)).thenReturn(user.getId());
         when(secondRequest.getParameter(ID)).thenReturn(user.getId());
-        assertThat(list.userTab(), is(containsString(" name='test', eMail='test', login='test', ")));
-        assertThat(update.updatePage(request), is(containsString("name=\"email\" value=\"test\"")));
-        service.update(secondRequest);
-        assertThat(update.updatePage(request), is(containsString("name=\"email\" value=\"Super@email\"")));
+        User result = service.update(secondRequest);
+        assertThat(result.getEmail(), is("Super@email"));
+        when(request.getParameter(DEL)).thenReturn(user.getId());
+        service.delete(request);
     }
 }

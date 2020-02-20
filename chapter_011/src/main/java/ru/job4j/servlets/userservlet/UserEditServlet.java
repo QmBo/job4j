@@ -6,25 +6,23 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-import static java.lang.String.format;
 
 /**
- * UsersServlet
+ * UserEditServlet
  * @author Victor Egorov (qrioflat@gmail.com).
  * @version 0.1
  * @since 13.02.2020
  */
-public class UsersServlet extends HttpServlet {
-    private static final Logger LOG = LogManager.getLogger(UsersServlet.class);
+public class UserEditServlet extends HttpServlet {
+    private static final Logger LOG = LogManager.getLogger(UserEditServlet.class);
     private final ValidateService service = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            req.setAttribute("users", service.findAll());
-            req.getRequestDispatcher("/WEB-INF/views/list.jsp").forward(req, resp);
+            req.setAttribute("user", service.findById(req));
+            req.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(req, resp);
         } catch (Exception e) {
             LOG.error("Exception", e);
         }
@@ -32,19 +30,12 @@ public class UsersServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        this.deleteUser(req);
         try {
-            resp.sendRedirect(format("%s/", req.getContextPath()));
-        } catch (IOException e) {
-            LOG.error("IOException", e);
+            this.service.update(req);
+            req.setAttribute("user", service.findById(req));
+            req.getRequestDispatcher("/WEB-INF/views/edit.jsp").forward(req, resp);
+        } catch (Exception e) {
+            LOG.error("Exception", e);
         }
-    }
-
-    /**
-     * Delete user.
-     * @param req request
-     */
-    private void deleteUser(HttpServletRequest req) {
-        this.service.delete(req);
     }
 }

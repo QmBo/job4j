@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<form action="<%=request.getContextPath()%>/create" method="post">
+<form action="${pageContext.servletContext.contextPath}/create" method="post">
     <table>
         <tr>
             <td>User name: </td>
