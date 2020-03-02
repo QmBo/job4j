@@ -45,8 +45,9 @@ public class DbStore implements Store {
     public User add(final User user) {
         List<User> result = this.sqlRequest(
                 format(
-                        "insert into users (name, login, email, create_time) values ('%s', '%s', '%s', '%d') RETURNING *",
-                        user.getName(), user.getLogin(), user.getEmail(), user.getCreateDate().getTime()
+                        "insert into users (name, login, email, create_time, photoId) values ('%s', '%s', '%s', '%d', '%s') RETURNING *",
+                        user.getName(), user.getLogin(), user.getEmail(),
+                        user.getCreateDate().getTime(), user.getPhotoId()
                 )
         );
         return result.isEmpty() ? null : result.get(0);
@@ -61,8 +62,9 @@ public class DbStore implements Store {
     public User update(final User user) {
         List<User> result = this.sqlRequest(
                 format(
-                        "update users set name = '%s', login = '%s', email = '%s', create_time = '%d' where id ='%s' RETURNING *",
-                        user.getName(), user.getLogin(), user.getEmail(), user.getCreateDate().getTime(), user.getId()
+                        "update users set name = '%s', login = '%s', email = '%s', create_time = '%d', photoId = '%s' where id ='%s' RETURNING *",
+                        user.getName(), user.getLogin(), user.getEmail(),
+                        user.getCreateDate().getTime(), user.getPhotoId(), user.getId()
                 )
         );
         return result.isEmpty() ? null : result.get(0);
@@ -118,6 +120,7 @@ public class DbStore implements Store {
                         rs.getString("name"),
                         rs.getString("email"),
                         rs.getString("login"),
+                        rs.getString("photoId"),
                         new Date(rs.getLong("create_time"))
                 ).setId(rs.getString("id"));
                 result.add(user);

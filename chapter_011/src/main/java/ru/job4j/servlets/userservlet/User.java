@@ -1,6 +1,8 @@
 package ru.job4j.servlets.userservlet;
 
 import java.util.Date;
+import java.util.Objects;
+
 /**
  * User
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -11,18 +13,20 @@ public class User implements Comparable<User> {
     private static final String DEF_NAME = "Default";
     private static final String DEF_EMAIL = "Default";
     private static final String DEF_LOGIN = "Default";
+    private static final String DEF_PHOTO = "default.png";
     private static final Date DATE = new Date(System.currentTimeMillis());
     private String id;
     private String name;
     private String eMail;
     private String login;
     private Date createDate;
+    private String photoId;
 
     /**
      * Constructor.
      */
     public User() {
-        this(DEF_NAME, DEF_EMAIL, DEF_LOGIN, DATE);
+        this(DEF_NAME, DEF_EMAIL, DEF_LOGIN, DEF_PHOTO, DATE);
     }
 
     /**
@@ -32,7 +36,18 @@ public class User implements Comparable<User> {
      * @param login User login
      */
     public User(final String name, final String eMail, final String login) {
-        this(name, eMail, login, DATE);
+        this(name, eMail, login, DEF_PHOTO, DATE);
+    }
+
+    /**
+     * Constructor.
+     * @param name User name
+     * @param eMail User email
+ * @param login User login
+     * @param photoId User photo id
+     */
+    public User(final String name, final String eMail, final String login, String photoId) {
+        this(name, eMail, login, photoId, DATE);
     }
 
     /**
@@ -40,12 +55,14 @@ public class User implements Comparable<User> {
      * @param name User name
      * @param eMail User email
      * @param login User login
+     * @param photoId User photo id
      * @param createDate User create date
      */
-    public User(final String name, final String eMail, final String login, final Date createDate) {
+    public User(final String name, final String eMail, final String login, String photoId, final Date createDate) {
         this.name = name;
         this.eMail = eMail;
         this.login = login;
+        this.photoId = photoId;
         this.createDate = createDate;
     }
 
@@ -86,29 +103,17 @@ public class User implements Comparable<User> {
             return false;
         }
         User user = (User) o;
-        if (id != null ? !id.equals(user.id) : user.id != null) {
-            return false;
-        }
-        if (name != null ? !name.equals(user.name) : user.name != null) {
-            return false;
-        }
-        if (eMail != null ? !eMail.equals(user.eMail) : user.eMail != null) {
-            return false;
-        }
-        if (login != null ? !login.equals(user.login) : user.login != null) {
-            return false;
-        }
-        return createDate != null ? createDate.equals(user.createDate) : user.createDate == null;
+        return Objects.equals(id, user.id)
+                && name.equals(user.name)
+                && eMail.equals(user.eMail)
+                && login.equals(user.login)
+                && createDate.equals(user.createDate)
+                && photoId.equals(user.photoId);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (eMail != null ? eMail.hashCode() : 0);
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name, eMail, login, createDate, photoId);
     }
 
     /**
@@ -158,5 +163,13 @@ public class User implements Comparable<User> {
      */
     public Date getCreateDate() {
         return this.createDate;
+    }
+
+    /**
+     * Photo id getter.
+     * @return photo id
+     */
+    public String getPhotoId() {
+        return this.photoId;
     }
 }

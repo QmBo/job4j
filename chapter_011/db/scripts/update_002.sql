@@ -1,0 +1,1 @@
+alter TABLE users add column photoId varchar(2000);

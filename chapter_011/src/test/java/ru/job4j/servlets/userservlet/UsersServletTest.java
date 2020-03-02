@@ -7,6 +7,8 @@ import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -33,9 +35,11 @@ public class UsersServletTest {
         when(request.getParameter(NAME)).thenReturn("test");
         when(request.getParameter(EMAIL)).thenReturn("test");
         when(request.getParameter(LOGIN)).thenReturn("test");
+        when(request.getParameterMap()).thenReturn(Collections.singletonMap("Test", new String[]{"Test"}));
         when(secondRequest.getParameter(NAME)).thenReturn("2");
         when(secondRequest.getParameter(EMAIL)).thenReturn("Super@email");
         when(secondRequest.getParameter(LOGIN)).thenReturn("2");
+        when(secondRequest.getParameterMap()).thenReturn(Collections.singletonMap("Test", new String[]{"Test"}));
         ValidateService service = ValidateService.getInstance();
         User user = service.add(request);
         when(request.getParameter(ID)).thenReturn(user.getId());

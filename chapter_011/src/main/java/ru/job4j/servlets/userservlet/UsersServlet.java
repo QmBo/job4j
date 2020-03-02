@@ -1,11 +1,13 @@
 package ru.job4j.servlets.userservlet;
 
+import com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 
 import static java.lang.String.format;
@@ -17,6 +19,8 @@ import static java.lang.String.format;
  * @since 13.02.2020
  */
 public class UsersServlet extends HttpServlet {
+    private static final String IMAGES_FOLDER = "WEB-INF/bin/images";
+    private static final String DEF_PHOTO = "default.png";
     private static final Logger LOG = LogManager.getLogger(UsersServlet.class);
     private final ValidateService service = ValidateService.getInstance();
 
@@ -41,10 +45,20 @@ public class UsersServlet extends HttpServlet {
     }
 
     /**
-     * Delete user.
+     * Delete user. If User have a photo id, try to delete photo file from image`s directory.
      * @param req request
      */
     private void deleteUser(HttpServletRequest req) {
-        this.service.delete(req);
+        User result = this.service.delete(req);
+        if (result != null) {
+            String photoId = result.getPhotoId();
+            if (!DEF_PHOTO.equals(photoId)) {
+                File folder = new File(this.getServletConfig().getServletContext().getRealPath(IMAGES_FOLDER));
+                File image = new File(Joiner.on(File.separatorChar).join(folder, photoId));
+                if (image.exists() && image.isFile()) {
+                    image.delete();
+                }
+            }
+        }
     }
 }

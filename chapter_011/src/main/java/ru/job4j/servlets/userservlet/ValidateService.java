@@ -2,6 +2,7 @@ package ru.job4j.servlets.userservlet;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
+
 /**
  * ValidateService
  * @author Victor Egorov (qrioflat@gmail.com).
@@ -14,6 +15,7 @@ public class ValidateService {
     private static final String NAME = "name";
     private static final String EMAIL = "email";
     private static final String LOGIN = "login";
+    private static final String PHOTO_ID = "photoId";
     private static final ValidateService SERVICE = new ValidateService();
     private final Store logic = DbStore.getInstance();
 
@@ -37,11 +39,19 @@ public class ValidateService {
      * @return answer
      */
     public User add(final HttpServletRequest req) {
-        User user = new User(
-                req.getParameter(NAME),
-                req.getParameter(EMAIL),
-                req.getParameter(LOGIN)
-        );
+        User user;
+        if (req.getParameterMap().isEmpty()) {
+            user = new User(
+                    (String) req.getAttribute(NAME),
+                    (String) req.getAttribute(EMAIL),
+                    (String) req.getAttribute(LOGIN),
+                    (String) req.getAttribute(PHOTO_ID));
+        } else {
+            user = new User(
+                    req.getParameter(NAME),
+                    req.getParameter(EMAIL),
+                    req.getParameter(LOGIN));
+        }
         return this.logic.add(user);
     }
 
@@ -51,7 +61,13 @@ public class ValidateService {
      * @return answer
      */
     public User findById(final HttpServletRequest req) {
-        return this.logic.findById(new User().setId(req.getParameter(ID)));
+        String id;
+        if (req.getParameterMap().isEmpty()) {
+            id = (String) req.getAttribute(ID);
+        } else {
+            id = req.getParameter(ID);
+        }
+        return this.logic.findById(new User().setId(id));
     }
 
     /**
@@ -78,14 +94,31 @@ public class ValidateService {
      */
     public User update(final HttpServletRequest req) {
         User result = null;
-        String id = req.getParameter(ID);
+        String id;
+        if (req.getParameterMap().isEmpty()) {
+            id = (String) req.getAttribute(ID);
+        } else {
+            id = req.getParameter(ID);
+        }
         User oldUser = this.logic.findById(new User().setId(id));
         if (oldUser != null) {
-            User user = new User(
-                    req.getParameter(NAME),
-                    req.getParameter(EMAIL),
-                    req.getParameter(LOGIN)
-            ).setId(id);
+            User user;
+            if (req.getParameterMap().isEmpty()) {
+                String photoId = (String) req.getAttribute(PHOTO_ID);
+                if (photoId == null) {
+                    photoId = oldUser.getPhotoId();
+                }
+                user = new User(
+                        (String) req.getAttribute(NAME),
+                        (String) req.getAttribute(EMAIL),
+                        (String) req.getAttribute(LOGIN),
+                        photoId).setId(id);
+            } else {
+                user = new User(
+                        req.getParameter(NAME),
+                        req.getParameter(EMAIL),
+                        req.getParameter(LOGIN)).setId(id);
+            }
             result = this.logic.update(user);
         }
         return result;

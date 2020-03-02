@@ -4,8 +4,7 @@
     <title>Create User</title>
 </head>
 <body>
-
-<form action="${pageContext.servletContext.contextPath}/create" method="post">
+<form action="${pageContext.servletContext.contextPath}/create" method="post" enctype="multipart/form-data">
     <table>
         <tr>
             <td>User name: </td>
@@ -18,6 +17,10 @@
         <tr>
             <td>User email: </td>
             <td><input type="email" name="email" placeholder="User email"></td>
+        </tr>
+        <tr>
+            <td>User image: </td>
+            <td><input type="file" name="file" accept="image/*"></td>
         </tr>
         <tr>
             <td><input type="submit" value="Create"></td>

@@ -18,6 +18,8 @@ import static java.lang.String.format;
  */
 public class UserCreateServlet extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserCreateServlet.class);
+    private static final String DEF_PHOTO = "default.png";
+    private static final String PHOTO_ID = "photoId";
     private final ValidateService service = ValidateService.getInstance();
 
     @Override
@@ -31,11 +33,19 @@ public class UserCreateServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        this.service.add(req);
         try {
+            this.add(req);
             resp.sendRedirect(format("%s/", req.getContextPath()));
         } catch (IOException e) {
             LOG.error("IOException", e);
         }
+    }
+
+    private void add(HttpServletRequest req) {
+        ImageUploader.upload(this, req);
+        if (req.getAttribute(PHOTO_ID) == null) {
+            req.setAttribute(PHOTO_ID, DEF_PHOTO);
+        }
+        this.service.add(req);
     }
 }

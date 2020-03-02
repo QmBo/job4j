@@ -8,6 +8,8 @@ import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+
 import static java.lang.String.format;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,6 +35,7 @@ public class UserServletTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        when(request.getParameterMap()).thenReturn(Collections.singletonMap("Test", new String[]{"Test"}));
     }
 
     private String addUser(UserServlet service) {
