@@ -1,6 +1,7 @@
 # Данный репозиторий предназначен для изучения Java по курсу [Job4j](http://job4j.ru "http://job4j.ru")
 [![Build Status](https://travis-ci.org/QmBo/job4j.svg?branch=master)](https://travis-ci.org/QmBo/job4j) 
 [![codecov](https://codecov.io/gh/QmBo/job4j/branch/master/graph/badge.svg)](https://codecov.io/gh/QmBo/job4j)
+[![CodeFactor](https://www.codefactor.io/repository/github/qmbo/job4j/badge)](https://www.codefactor.io/repository/github/qmbo/job4j)
 
 Я прохожу обучение по курсу Job4j. Планирую закончить обучение до 1 июля 2020 года.
 
