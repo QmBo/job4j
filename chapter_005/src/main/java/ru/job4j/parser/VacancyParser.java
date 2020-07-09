@@ -9,6 +9,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -28,6 +29,17 @@ public class VacancyParser {
      * Dead line.
      */
     private Date lastStart;
+    /**
+     * Month array.
+     */
+    private static DateFormatSymbols myDateFormatSymbols = new DateFormatSymbols() {
+
+        @Override
+        public String[] getMonths() {
+            return new String[]{"янв", "фев", "мар", "апр", "май", "июн",
+                    "июл", "авг", "сен", "окт", "ноя", "дек"};
+        }
+    };
 
     public VacancyParser(Date lastStart) {
         this.lastStart = lastStart;
@@ -146,7 +158,7 @@ public class VacancyParser {
             String[] text = elements.get(0).text().split(" \\[");
             LOG.debug("Date {}", text[0]);
             String date = text[0];
-            SimpleDateFormat sfReader = new SimpleDateFormat("d MMM yy, HH:mm", Locale.getDefault());
+            SimpleDateFormat sfReader = new SimpleDateFormat("d MMM yy, HH:mm", myDateFormatSymbols);
             SimpleDateFormat sfWriter = new SimpleDateFormat("d MMM yy", Locale.getDefault());
             Calendar calendar = new GregorianCalendar();
             if (date.startsWith("сегодня")) {
